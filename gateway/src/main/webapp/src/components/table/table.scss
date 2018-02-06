@@ -1,0 +1,176 @@
+@import "../../styles/layout.scss";
+@import "../../styles/colors.scss";
+@import "../../styles/font-awesome/font-awesome.scss";
+
+/*
+$table-head-bgcolor: $vlight-grey;
+$table-head-textcolor: $light-black;
+$table-border-color: $light-grey;
+$arrow-color: $grey;
+
+$table-head-bgcolor: $light-blue;
+$table-head-textcolor: white;
+$table-border-color: $light-grey;
+$arrow-color: white;
+*/
+
+$table-head-bgcolor: $vlight-grey;
+$table-head-textcolor: $light-black;
+$table-border-color: $light-grey;
+$arrow-color: $grey;
+
+$table-header-height: 45px;
+
+span {
+    font-size: 14px;
+}
+
+.page-span {
+    padding-right: 15px;
+}
+
+input,
+select {
+    border: 1px solid $table-border-color;
+    padding: 3px;
+    //border-radius: 3px;
+}
+
+input {
+    width: 200px;
+}
+
+select {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    padding-right: 8px;
+}
+
+.pager-button {
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 18px;
+    color: black;
+    &:hover {
+        color: $grey;
+    }
+}
+
+.search-container {
+    margin-bottom: 10px;
+    padding: 8px;
+    //border: 1px solid $table-border-color;
+}
+
+.table-container {
+    border: 1px solid $table-border-color;
+}
+
+.pager-container {
+    margin-top: 10px;
+    padding: 8px;
+    //border: 1px solid $table-border-color;
+}
+
+table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 14px;
+
+    tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    thead {
+        background-color: $table-head-bgcolor;
+        color: $table-head-textcolor;
+        border-bottom: 1px solid $table-border-color;
+        font-size: 18px;
+        tr {
+            height: $table-header-height;
+            border-right-color: $table-head-bgcolor;
+            border-right-style: solid;
+            th {
+                font-weight: 400;
+            }
+        }
+    }
+    
+    tbody {
+        display: block;
+        overflow-y: auto;
+        tr {
+            border-bottom: 1px solid $table-border-color;
+            cursor: pointer;
+            .activeStatus {
+                color: green;
+            }
+            .inactiveStatus {
+                color: red;
+            }
+        }
+        tr:last-child.scrollbar-exist {
+            border: none;
+        }
+    }
+
+    th, td {
+        text-align: left;
+        padding: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    
+    tr:nth-child(even) {
+        //background-color: $table-even-color;
+    }
+    
+    .datarow {
+        &:hover {
+            background-color: $ligt-yellow;
+        }
+    }
+
+    .selectedRow {
+        background-color: $light-blue;
+        .activeStatus {
+            color: black;
+        }
+        .inactiveStatus {
+            color: black;
+        }
+    }
+}
+
+.arrow {
+    display: inline-block;
+    vertical-align: middle;
+    width: 0;
+    height: 0;
+    margin-left: 4px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+.asc {
+    border-bottom: 5px solid $arrow-color;
+}
+
+.dsc {
+    border-top: 5px solid $arrow-color;
+}
+
+.newbutton {
+    font-size: 18px;
+    padding: 3px 10px;
+    cursor: pointer;
+    color: $light-black;
+    border: 1px solid white;
+}
+
+.newbutton:hover {
+    border: 1px solid $table-border-color;
+}
