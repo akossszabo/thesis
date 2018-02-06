@@ -26,16 +26,11 @@ export default {
   data() {
     return {
       headers: [
-        { title: "Id", key: "id", width: "50px" },
-        { title: "Name", key: "name", width: "200px" },
-        { title: "Manufacturer", key: "manufacturer", width: "200px" },
-        { title: "Price", key: "price", width: "15%" },
-        { title: "Stock", key: "stock", width: "15%" },
-        { title: "Status", key: "status" },
-        { title: "Adding date", key: "addDate" }
+        { title: "Name", key: "name" },
+        { title: "Company", key: "company" }
       ],
       datas: [],
-      defaultSortKey: "id",
+      defaultSortKey: "name",
       hiddenTable: true
     };
   },
@@ -46,7 +41,7 @@ export default {
 
   methods: {
     fetch() {
-      http.get(config.getAllProductsUrl).then(({ data }) => {
+      http.get(config.getDummyDataUrl).then(({ data }) => {
         this.datas = data.items;
         this.hiddenTable = false;
       });
