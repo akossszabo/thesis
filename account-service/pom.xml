@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.thesis</groupId>
-	<artifactId>data-service</artifactId>
+	<artifactId>account-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>account-service</name>
-	<description>data-service</description>
+	<description>account-service</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

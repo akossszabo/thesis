@@ -18,8 +18,8 @@ zuul:
 
   routes:
     account-service:
-        path: /data/**
-        serviceId: data-service
+        path: /accounts/**
+        serviceId: account-service
         stripPrefix: false
         sensitiveHeaders:
         
