@@ -1,4 +1,4 @@
-package com.thesis.dataservice;
+package com.thesis.accountservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

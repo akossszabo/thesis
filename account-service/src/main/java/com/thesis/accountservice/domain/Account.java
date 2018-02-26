@@ -1,13 +1,13 @@
-package com.thesis.dataservice.domain;
+package com.thesis.accountservice.domain;
 
 import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
+
+import org.hibernate.validator.constraints.Email;
 
 @Entity
-//@Table(name="user_table", schema = "thesis")
 public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -15,6 +15,7 @@ public class Account implements Serializable {
 	private Long id;
 	private String username;
 	private String password;
+	@Email
 	private String email;
 	private String role;
 	private String firstName;
