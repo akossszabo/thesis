@@ -1,14 +1,21 @@
+    
+server:
+   port: 4040
+   
 hystrix:
   command:
     default:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 20000
+            timeoutInMilliseconds: 50000
 
 ribbon:
+  eureka:
+    enabled: true
   ReadTimeout: 20000
   ConnectTimeout: 20000
+  
 
 zuul:
   ignoredServices: '*'
@@ -21,9 +28,12 @@ zuul:
         path: /accounts/**
         serviceId: account-service
         stripPrefix: false
-        sensitiveHeaders:
+
+    project-service:
+        path: /projects/**
+        serviceId: project-service
+        stripPrefix: false
         
-       
-server:
-   port: 4040
-    
+management:
+  securirity:
+    enabled: false
