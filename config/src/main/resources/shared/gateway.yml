@@ -1,4 +1,4 @@
-    
+
 server:
    port: 4040
    
@@ -13,27 +13,25 @@ hystrix:
 ribbon:
   eureka:
     enabled: true
-  ReadTimeout: 20000
-  ConnectTimeout: 20000
-  
 
+##########  Zuul Configuraiton ##########    
 zuul:
   ignoredServices: '*'
-  host:
-    connect-timeout-millis: 20000
-    socket-timeout-millis: 20000
-
   routes:
     account-service:
         path: /accounts/**
         serviceId: account-service
-        stripPrefix: false
 
     project-service:
         path: /projects/**
         serviceId: project-service
-        stripPrefix: false
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    registerWithEureka: false
         
 management:
-  securirity:
+  security:
     enabled: false
+    

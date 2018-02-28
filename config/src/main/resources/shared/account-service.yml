@@ -3,15 +3,20 @@ spring:
     username: thesis
     password: thesis
     url: jdbc:postgresql://localhost:5432/account-service
-
   jpa:
     show-sql: true
-    properties: 
-        default_schema: thesis
-        hibernate.hbm2ddl.auto: create-drop
-        
+    properties:
+      default_schema: thesis
+      hibernate.hbm2ddl.auto: create-drop
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${DISCOVERY_URL:http://localhost:8761}/eureka/
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
 logging:
   level:
     org:
       hibernate:
-        sql:  debug
+        sql: debug
