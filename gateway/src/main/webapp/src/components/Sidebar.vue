@@ -27,17 +27,18 @@ export default {
       hiddableMenu: true,
       menuitems: [
         {
+          isLink: true,
           title: "Home",
-          path: "",
-          children: [{ title: "Dashboard", path: "/" }]
+          path: "/",
+          children: []
         },
         {
+          isLink: false,
           title: "Catalog",
           path: "/catalog",
           children: [
-            { title: "Products", path: "/products" },
-            { title: "Categories", path: "/categories" },
-            { title: "Media", path: "/media" }
+            { title: "Projects", path: "/projects" },
+            { title: "Issues", path: "/issues" }
           ]
         },
       ],

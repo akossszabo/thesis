@@ -60,9 +60,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				String email = authentication.getName();
 				String password = authentication.getCredentials().toString();
 				List<GrantedAuthority> grantedAuths = new ArrayList<>();
+				System.out.println("beesett: " + email + " " +  password);
 				Account user = accountRepo.findByEmail(email);
 				if (user != null) {
-					if (user.getEmail().equalsIgnoreCase(email) && encoder.matches(password, user.getPassword())) {
+					if (user.getEmail().equalsIgnoreCase(email) && password.equals(user.getPassword()) /*TODO:encoder.matches(password, user.getPassword()*/) {
 						grantedAuths.add(new SimpleGrantedAuthority("USER"));
 						Authentication auth = new UsernamePasswordAuthenticationToken(user.getUsername(), password,
 								grantedAuths);

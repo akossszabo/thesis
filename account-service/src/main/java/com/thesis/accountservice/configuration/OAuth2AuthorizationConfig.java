@@ -13,6 +13,8 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
+import com.thesis.accountservice.service.AccountService;
+
 @Configuration
 @EnableAuthorizationServer
 public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
@@ -26,6 +28,9 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 	@Autowired
 	private Environment env;
 
+	@Autowired
+	private AccountService accService;
+
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 
@@ -33,14 +38,14 @@ public class OAuth2AuthorizationConfig extends AuthorizationServerConfigurerAdap
 
 		// @formatter:off
 		clients.inMemory().withClient("browser").authorizedGrantTypes("refresh_token", "password").scopes("ui").and()
-				.withClient("project-service").secret(env.getProperty("PROJECT_SERVICE_PASSWORD"))
+				.withClient("project-service").secret("hello")
 				.authorizedGrantTypes("client_credentials", "refresh_token").scopes("server");
 		// @formatter:on
 	}
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints.tokenStore(tokenStore).authenticationManager(authenticationManager);
+		endpoints.tokenStore(tokenStore).authenticationManager(authenticationManager).userDetailsService(accService);
 	}
 
 	@Override

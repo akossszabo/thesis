@@ -1,5 +1,4 @@
 export default {
-  appName: 'Application',
-  apiBaseUrl: 'http://localhost:4040/api',
-  getDummyDataUrl: '/dummy'
+  appName: 'Project Manager',
+  apiBaseUrl: 'http://localhost:4040/'
 }
