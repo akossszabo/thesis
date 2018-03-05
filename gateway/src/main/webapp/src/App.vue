@@ -1,6 +1,8 @@
 <template>
   <div class="app-main">
-    <headbar></headbar>
+    <headbar>
+      
+    </headbar>
     <div class="app-content">
       <sidebar></sidebar>
       <div class="app-page" :class="{'fullpage': !isSidebarVisible}">
@@ -14,7 +16,6 @@
 import { mapState } from "vuex";
 import headbar from "./components/Headbar.vue";
 import sidebar from "./components/Sidebar.vue";
-
 export default {
   components: { headbar, sidebar },
 
@@ -40,4 +41,7 @@ export default {
     margin-left: 0;
   }
 }
+</style>
+<style lang="css">
+@import "./styles/vue-material.min.css";
 </style>

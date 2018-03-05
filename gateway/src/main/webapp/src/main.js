@@ -3,8 +3,10 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 import routes from './routes.js'
 import store from './store/store.js'
-
+import VueMaterial from 'vue-material';
 Vue.use(VueRouter)
+Vue.use(VueMaterial)
+
 
 new Vue({
   el: '#app',

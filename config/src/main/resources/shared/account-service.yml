@@ -20,3 +20,6 @@ logging:
     org:
       hibernate:
         sql: debug
+        
+server:
+  port: 8084

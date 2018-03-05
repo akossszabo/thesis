@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.thesis.accountservice.controller.AccountController;
 import com.thesis.accountservice.domain.Account;
 import com.thesis.accountservice.dto.AccountDto;
-import com.thesis.accountservice.dto.RegistrationRequestDto;
 import com.thesis.accountservice.repository.AccountRepository;
 
 @Service
@@ -35,13 +34,8 @@ public class AccountService implements UserDetailsService {
 		return user;
 	}
 
-	public void createAccounts(RegistrationRequestDto request) {
-		for (AccountDto account : request.getAccounts()) {
-			createAccount(account);
-		}
-	}
 
-	private void createAccount(AccountDto account) {
+	public void createAccount(AccountDto account) {
 		Account acc = new Account();
 		acc.setEmail(account.getEmail());
 		acc.setLastName(account.getLastName());
@@ -55,11 +49,11 @@ public class AccountService implements UserDetailsService {
 
 	private String generateRandomPassword() {
 		// TODO Auto-generated method stub
-		return null;
+		return "TESZT";
 	}
 
 	private String generateUsername(String firstName, String lastName) {
 		// TODO Auto-generated method stub
-		return null;
+		return "username";
 	}
 }

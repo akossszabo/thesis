@@ -1,16 +1,16 @@
 package com.thesis.accountservice.dto;
 
-import java.util.List;
-
 public class RegistrationRequestDto {
 
-	private List<AccountDto> accounts;
+	private AccountDto account;
 
-	public List<AccountDto> getAccounts() {
-		return accounts;
+	public AccountDto getAccount() {
+		return account;
 	}
 
-	public void setAccounts(List<AccountDto> accounts) {
-		this.accounts = accounts;
+	public void setAccount(AccountDto account) {
+		this.account = account;
 	}
+
+	
 }
