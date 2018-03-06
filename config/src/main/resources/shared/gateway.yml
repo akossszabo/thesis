@@ -1,7 +1,9 @@
-
 server:
-   port: 4040
-   
+  port: 4040
+  session:
+    cookie:
+      name: UISESSION
+      
 hystrix:
   command:
     default:
@@ -9,29 +11,38 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 50000
-
 ribbon:
   eureka:
     enabled: true
-
-##########  Zuul Configuraiton ##########    
+    
 zuul:
   ignoredServices: '*'
   routes:
     account-service:
-        path: /accounts/**
-        serviceId: account-service
-
+      path: /accounts/**
+      serviceId: account-service
     project-service:
-        path: /projects/**
-        serviceId: project-service
+      path: /projects/**
+      serviceId: project-service
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
     registerWithEureka: false
-        
 management:
   security:
     enabled: false
-    
+
+security:
+  user:
+    name: root
+    password: password
+  oauth2:
+    client:
+      clientId: gateway
+      clientSecret: secret
+      accessTokenUri: http://localhost:8084/oauth/token
+      userAuthorizationUri: http://localhost:8084/oauth/authorize
+    resource:
+      loadBalanced: true
+      userInfoUri: http://localhost:8084/principal

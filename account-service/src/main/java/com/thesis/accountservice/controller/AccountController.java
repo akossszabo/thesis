@@ -1,5 +1,7 @@
 package com.thesis.accountservice.controller;
 
+import java.security.Principal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,17 @@ public class AccountController {
 		BaseResponse response = new BaseResponse();
 		try {
 			accountService.createAccount(request.getAccount());
+			log.debug("New account succesfully created!");
 			response.setMessage("New account succesfully created!");
 		} catch (Throwable t) {
 			log.error("error while creating new account", t);
 			response.setMessage("Something went wrong!");
 		}
 		return response;
+	}
+	
+	@RequestMapping(value = "/principal", method = RequestMethod.GET)
+	public Principal getPrincipal(Principal principal) {
+		return principal;
 	}
 }

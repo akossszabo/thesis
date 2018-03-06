@@ -23,3 +23,12 @@ logging:
         
 server:
   port: 8084
+  
+  security:
+  user:
+    name: root
+    password: password
+  oauth2:
+    client:
+      client-id: gateway
+      client-secret: secret
