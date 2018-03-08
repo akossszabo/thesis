@@ -1,11 +1,13 @@
 package com.thesis.accountservice.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,24 +17,20 @@ import com.thesis.accountservice.dto.AccountDto;
 import com.thesis.accountservice.repository.AccountRepository;
 
 @Service
-public class AccountService implements UserDetailsService {
+public class AccountService{
 
 	private static Logger log = LoggerFactory.getLogger(AccountController.class);
 
 	@Autowired
 	private AccountRepository accountRepo;
 
+	@Bean
+	public BCryptPasswordEncoder encoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
-
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Account user = accountRepo.findByUsername(username);
-		if (user == null) {
-			throw new UsernameNotFoundException(username);
-		}
-		return user;
-	}
 
 
 	public void createAccount(AccountDto account) {
@@ -54,6 +52,21 @@ public class AccountService implements UserDetailsService {
 
 	private String generateUsername(String firstName, String lastName) {
 		// TODO Auto-generated method stub
-		return "username";
+		return UUID.randomUUID().toString();
+	}
+
+	public List<AccountDto> getAllAccounts() {
+		List<AccountDto> accounts = new ArrayList<>();
+		List<Account> accs = accountRepo.findAll();
+		if(null!= accs) {
+			for(Account ac : accs) {
+				AccountDto dto = new AccountDto();
+				dto.setEmail(ac.getEmail());
+				dto.setFirstName(ac.getFirstName());
+				dto.setLastName(ac.getLastName());
+				accounts.add(dto);
+			}
+		}
+		return accounts;
 	}
 }

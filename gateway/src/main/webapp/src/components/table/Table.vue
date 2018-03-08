@@ -4,7 +4,7 @@
     <div v-show="datas.length > 0" class="search-container">
       <span> Search: <input name="query" v-model="filterKey"> </span>
       <span style="float: right">
-        <button class="newbutton">Add</button>
+        <button class="newbutton" @click="$emit('onNewClick')">Add</button>
       </span>
       <span v-show="selectable" style="float: right">
         <button class="newbutton" @click="selectAllRows">All</button>

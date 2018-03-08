@@ -42,6 +42,3 @@ export default {
   }
 }
 </style>
-<style lang="css">
-@import "./styles/vue-material.min.css";
-</style>

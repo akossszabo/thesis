@@ -1,58 +1,68 @@
 <template>
   <div class="app-container">
-    <apptable 
-      v-show="!hiddenTable" 
-      :headers="headers" 
-      :datas="datas" 
-      :defaultSortKey="defaultSortKey" 
-      :defaultPageSize="50"
-      :selectable="true"
-      :deletable="true"
-      :editable="true"
-      :coloredStatus="true"
-      @onRowClick="rowClick">
-      </apptable>
+    <button id="myBtn" @click="showModal=true">Open Modal</button>
+    <div v-show="showModal" id="myModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close" @click="showModal=false">&times;</span>
+          <h2>Modal Header</h2>
+        </div>
+
+        <form>
+          <div class="form-group">
+            <input type="text" required="required" v-model="text1" />
+            <label class="control-label" for="input">Textfield 1</label><i class="bar"></i>
+          </div>
+
+          <div class="form-group">
+            <input type="text" required="required"/>
+            <label class="control-label" for="input">Textfield 2</label><i class="bar"></i>
+          </div>
+
+          <div class="form-group">
+            <select>
+              <option v-for="o in options" :key="o.title"> {{ o.title }}</option>
+            </select>
+            <label class="control-label" for="select">Selectbox</label><i class="bar"></i>
+          </div>
+        </form>
+
+        <div class="button-container">
+          <button class="button" type="button" @click="submit"><span>Submit</span></button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
+
 <script>
-import http from "../http.js";
-import config from "../config.js";
-import apptable from "../components/table/Table.vue";
-
 export default {
-  components: { apptable },
-
   data() {
     return {
-      headers: [
-        { title: "Name", key: "name" },
-        { title: "Company", key: "company" }
+      showModal: false,
+      options: [
+        { title: "Id" },
+        { title: "Name" },
+        { title: "Manufacturer" },
+        { title: "Price" },
+        { title: "Stock" },
+        { title: "Status" },
+        { title: "Adding date" }
       ],
-      datas: [],
-      defaultSortKey: "name",
-      hiddenTable: true
+      text1: ""
     };
   },
 
-  created() {
-    this.fetch();
-  },
-
   methods: {
-    fetch() {
-      http.get(config.getIssuesUrl).then(({ data }) => {
-        this.datas = data.items;
-        this.hiddenTable = false;
-      });
-    },
-    rowClick(row) {
-      console.log(row);
+    submit() {
+      console.log(this.text1);
+      this.showModal = false;
     }
   }
 };
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+@import "../styles/modal_form.scss";
 </style>

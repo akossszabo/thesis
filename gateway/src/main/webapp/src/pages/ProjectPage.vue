@@ -41,7 +41,7 @@ export default {
 
   methods: {
     fetch() {
-      http.get(config.getDummyDataUrl).then(({ data }) => {
+      http.get(config.getAllProjects).then(({ data }) => {
         this.datas = data.items;
         this.hiddenTable = false;
       });

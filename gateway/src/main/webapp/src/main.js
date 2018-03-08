@@ -3,9 +3,9 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 import routes from './routes.js'
 import store from './store/store.js'
-import VueMaterial from 'vue-material';
+import Vuetify from 'vuetify'
 Vue.use(VueRouter)
-Vue.use(VueMaterial)
+Vue.use(Vuetify)
 
 
 new Vue({
