@@ -38,7 +38,8 @@ export default {
           path: "/catalog",
           children: [
             { title: "Projects", path: "/projects" },
-            { title: "Issues", path: "/issues" }
+            { title: "Issues", path: "/issues" },
+            { title: "Accounts", path: "/registration" }
           ]
         },
       ],

@@ -19,7 +19,6 @@
 
 <script>
 import infobox from "../components/InfoBox.vue";
-
 export default {
   components: { infobox }
 };

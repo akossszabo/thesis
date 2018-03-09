@@ -83,6 +83,8 @@ export default {
             var from = this.pageSize * (this.pageNumber - 1);
             return data.slice(from, from + this.pageSize);
         }
+
+        
     },
 
     methods: {

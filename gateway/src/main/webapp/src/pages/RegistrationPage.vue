@@ -39,7 +39,7 @@
     <apptable 
       v-show="!hiddenTable" 
       :headers="headers" 
-      :datas="datas" 
+      :datas="datas"
       :defaultSortKey="defaultSortKey" 
       :defaultPageSize="50"
       :selectable="true"
@@ -74,8 +74,8 @@ export default {
         { title: "Adding date" }
       ],
       headers: [
-        { title: "First name", key: "firstname" },
-        { title: "Last name", key: "lastname" },
+        { title: "First name", key: "firstName" },
+        { title: "Last name", key: "lastName" },
         { title: "Email address", key: "email" }
       ],
       datas: [],
@@ -96,8 +96,8 @@ export default {
                 }
                 }
         http.post(config.registrationUrl, request).then(({ response }) => {
-            console.log(response.message);
             this.fetch();
+
       });
 
       this.showModal = false;
