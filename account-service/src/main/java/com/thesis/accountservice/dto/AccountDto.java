@@ -4,6 +4,7 @@ import java.util.List;
 
 public class AccountDto extends BaseResponse {
 
+	private Long id;
 	private String email;
 	private String firstName;
 	private String lastName;
@@ -48,5 +49,13 @@ public class AccountDto extends BaseResponse {
 
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

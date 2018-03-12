@@ -34,7 +34,12 @@ public class AccountService{
 
 
 	public void createAccount(AccountDto account) {
-		Account acc = new Account();
+		Account acc = null;
+		if(null == account.getId() || null == accountRepo.findOne(account.getId())) {
+			acc = new Account();
+		}else {
+			acc = accountRepo.findOne(account.getId());			
+		}
 		acc.setEmail(account.getEmail());
 		acc.setLastName(account.getLastName());
 		acc.setFirstName(account.getFirstName());
@@ -42,7 +47,7 @@ public class AccountService{
 		String password = generateRandomPassword();
 		acc.setPassword(encoder.encode(password));
 		accountRepo.saveAndFlush(acc);
-		log.debug("new account succesfully created, username: " + acc.getUsername());
+		log.debug("Account succesfully created/updated, username: " + acc.getUsername()+ ", id: " + acc.getId());
 	}
 
 	private String generateRandomPassword() {
@@ -61,6 +66,7 @@ public class AccountService{
 		if(null!= accs) {
 			for(Account ac : accs) {
 				AccountDto dto = new AccountDto();
+				dto.setId(ac.getId());
 				dto.setEmail(ac.getEmail());
 				dto.setFirstName(ac.getFirstName());
 				dto.setLastName(ac.getLastName());

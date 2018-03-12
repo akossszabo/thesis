@@ -1,7 +1,7 @@
 <template>
   <div class="maxheight unselectable" ref="tablepage">
 
-    <div v-show="datas.length > 0" class="search-container">
+    <div class="search-container">
       <span> Search: <input name="query" v-model="filterKey"> </span>
       <span style="float: right">
         <button class="newbutton" @click="$emit('onNewClick')">Add</button>
@@ -16,7 +16,7 @@
         <button class="newbutton" @click="">Delete</button>
       </span>
       <span v-show="selectable && editable && selectedRows.length === 1" style="float: right">
-        <button class="newbutton" @click="">Edit</button>
+        <button class="newbutton" @click="$emit('onEditClick')">Edit</button>
       </span>
     </div>
 

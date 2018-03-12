@@ -24,7 +24,8 @@ export default {
             filterKey: "",
             bodyHeight: null,
             scollbarWidth: 0,
-            selectedRows: []
+            selectedRows: [],
+            selectedRow: null
         };
     },
 
@@ -120,13 +121,19 @@ export default {
             this.bodyHeight = this.$refs.tablepage.clientHeight - 155;
         },
         onRowSelected(id) {
+            
+            console.log("id: ",id);
+            console.log("rows: ",this.selectedRows);
             if(this.selectable) {
                 if(this.selectedRows.includes(id)) {
                     this.selectedRows = this.selectedRows.filter(t => t != id);
                 } else {
                     this.selectedRows.push(id);
                 }
+                this.selectedRow
             }
+            console.log("rows2: ",this.selectedRows);
+
         },
         clearSelectedRows() {
             this.selectedRows = [];

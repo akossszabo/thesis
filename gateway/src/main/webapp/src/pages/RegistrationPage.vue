@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <span class="close" @click="showModal=false">&times;</span>
-          <h2>Modal Header</h2>
+          <h2>Create/Update account</h2>
         </div>
 
         <form>
@@ -35,7 +35,11 @@
           <button class="button" type="button" @click="submit"><span>Submit</span></button>
         </div>
       </div>
-    </div>
+      </div>
+      <div :class="{'error-message' : showMessage, 'error-message-hide' : !showMessage}" v-show="showMessage" @click="hide=true;showMessage=false">
+        {{this.serverMessage}}
+      </div>
+      
     <apptable 
       v-show="!hiddenTable" 
       :headers="headers" 
@@ -47,7 +51,8 @@
       :editable="true"
       :coloredStatus="true"
       @onRowClick="rowClick"
-      @onNewClick="showModal=true">
+      @onNewClick="showModal=true; email='';firstName='';lastName=''; id=null"
+      @onEditClick="edit">
       </apptable>
   </div>
 </template>
@@ -64,6 +69,7 @@ export default {
   data() {
     return {
       showModal: false,
+      showMessage: false,
       options: [
         { title: "Id" },
         { title: "Name" },
@@ -80,7 +86,9 @@ export default {
       ],
       datas: [],
       defaultSortKey: "firstname",
-      hiddenTable: true
+      hiddenTable: true,
+      selectedRow: null,
+      serverMessage: null
     };
   },
     created() {
@@ -90,14 +98,22 @@ export default {
     submit() {
         var request = {
                 account: {
+                    id: this.id,
                     lastName:   this.lastName,
                     firstName:  this.firstName,
                     email:      this.email 
                 }
                 }
-        http.post(config.registrationUrl, request).then(({ response }) => {
+        http.post(config.registrationUrl, request).then(({ data }) => {
+            this.hide = false;
+            console.log("resp: ",data);
+            this.serverMessage = data.message;
+            this.showMessage = true;
             this.fetch();
 
+            setTimeout(() => {
+                this.showMessage = false;
+            }, 5000);
       });
 
       this.showModal = false;
@@ -110,6 +126,17 @@ export default {
     },
     rowClick(row) {
       console.log(row);
+      this.selectedRow = row;
+    },
+    edit(){
+        
+        this.lastName = this.selectedRow.lastName;
+        this.firstName = this.selectedRow.firstName;
+        this.id= this.selectedRow.id;
+        this.email= this.selectedRow.email;
+        this.showModal=true;
+        console.log("ezvan itt: ", this.selectedRow);
+
     }
   }
 };
