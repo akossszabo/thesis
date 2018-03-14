@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thesis.accountservice.dto.AccountsResponseDto;
 import com.thesis.accountservice.dto.BaseResponse;
+import com.thesis.accountservice.dto.DeleteAccountsRequestDto;
 import com.thesis.accountservice.dto.RegistrationRequestDto;
 import com.thesis.accountservice.service.AccountService;
 
@@ -38,6 +39,20 @@ public class AccountController {
 		return response;
 	}
 	
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public BaseResponse delete(@RequestBody DeleteAccountsRequestDto request) {
+		BaseResponse response = new BaseResponse();
+		try {
+			accountService.removeAccounts(request.getAccountIds());
+			log.debug("Accounts succesfully deleted, ids: " + request.getAccountIds());
+			response.setMessage("Account(s) deleted.");
+		} catch (Throwable t) {
+			log.error("error while remove accounts", t);
+			response.setMessage("Something went wrong!");
+		}
+		return response;
+	}
+	
 	@RequestMapping(value = "/accounts", method = RequestMethod.GET)
 	public AccountsResponseDto getAllAccounts() {
 		AccountsResponseDto response = new AccountsResponseDto();
@@ -45,7 +60,7 @@ public class AccountController {
 			response.setItems(accountService.getAllAccounts());
 			log.debug("get all accounts");
 		} catch (Throwable t) {
-			log.error("error while creating new account", t);
+			log.error("error while listing accounts", t);
 			response.setMessage("Something went wrong!");
 		}
 		return response;

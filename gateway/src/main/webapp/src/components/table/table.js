@@ -25,7 +25,7 @@ export default {
             bodyHeight: null,
             scollbarWidth: 0,
             selectedRows: [],
-            selectedRow: null
+            selectedRowIds: []
         };
     },
 
@@ -84,8 +84,6 @@ export default {
             var from = this.pageSize * (this.pageNumber - 1);
             return data.slice(from, from + this.pageSize);
         }
-
-        
     },
 
     methods: {
@@ -120,29 +118,28 @@ export default {
         onResize() {
             this.bodyHeight = this.$refs.tablepage.clientHeight - 155;
         },
-        onRowSelected(id) {
-            
-            console.log("id: ",id);
-            console.log("rows: ",this.selectedRows);
+        onRowSelected(entry) {
+            var id = entry.id;
             if(this.selectable) {
-                if(this.selectedRows.includes(id)) {
-                    this.selectedRows = this.selectedRows.filter(t => t != id);
+                if(this.selectedRowIds.includes(id)) {
+                    this.selectedRowIds = this.selectedRowIds.filter(t => t != id);
+                    this.selectedRows = this.selectedRows.filter(r => r.id != id);
                 } else {
-                    this.selectedRows.push(id);
+                    this.selectedRowIds.push(id);
+                    this.selectedRows.push(entry);
                 }
-                this.selectedRow
             }
-            console.log("rows2: ",this.selectedRows);
-
         },
         clearSelectedRows() {
+            this.selectedRowIds = [];
             this.selectedRows = [];
         },
         selectAllRows() {
             if(this.selectable) {
                 this.filteredData.forEach(element => {
-                    if(!this.selectedRows.includes(element.id)) {
-                        this.selectedRows.push(element.id)
+                    if(!this.selectedRowIds.includes(element.id)) {
+                        this.selectedRowIds.push(element.id)
+                        this.selectedRows.push(element)
                     }
                 });
             }

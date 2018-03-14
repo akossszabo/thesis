@@ -1,10 +1,10 @@
 <template>
   <div class="maxheight unselectable" ref="tablepage">
 
-    <div class="search-container">
+    <div  class="search-container">
       <span> Search: <input name="query" v-model="filterKey"> </span>
       <span style="float: right">
-        <button class="newbutton" @click="$emit('onNewClick')">Add</button>
+        <button class="newbutton" @click="$emit('onAddClick')">Add</button>
       </span>
       <span v-show="selectable" style="float: right">
         <button class="newbutton" @click="selectAllRows">All</button>
@@ -13,7 +13,7 @@
         <button class="newbutton" @click="clearSelectedRows">Clear</button>
       </span>
       <span v-show="selectable && deletable && selectedRows.length > 0" style="float: right">
-        <button class="newbutton" @click="">Delete</button>
+        <button class="newbutton" @click="$emit('onDeleteClick',selectedRowIds)">Delete</button>
       </span>
       <span v-show="selectable && editable && selectedRows.length === 1" style="float: right">
         <button class="newbutton" @click="$emit('onEditClick')">Edit</button>
@@ -34,9 +34,9 @@
 
         <tbody ref="tablebody" :style="{ height: bodyHeight + 'px' }">
           <tr class="datarow" 
-              :class="{'scrollbar-exist': scollbarWidth > 0, 'selectedRow': selectable && selectedRows.includes(entry.id) }"
+              :class="{'scrollbar-exist': scollbarWidth > 0, 'selectedRow': selectable && selectedRowIds.includes(entry.id) }"
               v-for="(entry, index) in filteredData" :key="index" 
-              @click="onRowSelected(entry.id); $emit('onRowClick', entry)"
+              @click="onRowSelected(entry); $emit('onRowClick', entry, selectedRows)"
               >
             <td v-for="header in headers" :key="header.key" :style="{ width: header.width }" :class=header.bclasses>
               <span :class="{ 'activeStatus': coloredStatus && header.key.toUpperCase() === 'STATUS' && entry[header.key].toUpperCase() === 'ACTIVE', 

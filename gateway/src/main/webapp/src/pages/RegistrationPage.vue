@@ -1,45 +1,13 @@
 <template>
   <div class="app-container">
-    <div v-show="showModal" id="myModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <span class="close" @click="showModal=false">&times;</span>
-          <h2>Create/Update account</h2>
-        </div>
+    <form_modal 
+      v-show="showModal"
+      :fields="formfields"
+      :formdata="formdata"
+      @onSubmitClick="submit"
+      @onCancelClick="showModal=false">
+    </form_modal>
 
-        <form>
-          <div class="form-group">
-            <input type="text" required="required" v-model="firstName" />
-            <label class="control-label" for="input">First Name</label><i class="bar"></i>
-          </div>
-
-          <div class="form-group">
-            <input type="text" required="required" v-model="lastName"/>
-            <label class="control-label" for="input">Last Name</label><i class="bar"></i>
-          </div>
-
-          <div class="form-group">
-            <input type="text" required="required" v-model="email"/>
-            <label class="control-label" for="input">Email</label><i class="bar"></i>
-          </div>
-
-          <div class="form-group">
-            <select>
-              <option v-for="o in options" :key="o.title"> {{ o.title }}</option>
-            </select>
-            <label class="control-label" for="select">Selectbox</label><i class="bar"></i>
-          </div>
-        </form>
-
-        <div class="button-container">
-          <button class="button" type="button" @click="submit"><span>Submit</span></button>
-        </div>
-      </div>
-      </div>
-      <div :class="{'error-message' : showMessage, 'error-message-hide' : !showMessage}" v-show="showMessage" @click="hide=true;showMessage=false">
-        {{this.serverMessage}}
-      </div>
-      
     <apptable 
       v-show="!hiddenTable" 
       :headers="headers" 
@@ -51,7 +19,8 @@
       :editable="true"
       :coloredStatus="true"
       @onRowClick="rowClick"
-      @onNewClick="showModal=true; email='';firstName='';lastName=''; id=null"
+      @onAddClick="add"
+      @onDeleteClick="deleteAccounts"
       @onEditClick="edit">
       </apptable>
   </div>
@@ -62,9 +31,9 @@
 import http from "../http.js";
 import config from "../config.js";
 import apptable from "../components/table/Table.vue";
-
+import form_modal from "../components/FormModal.vue";
 export default {
-    components: { apptable },
+    components: { apptable,form_modal },
 
   data() {
     return {
@@ -84,9 +53,15 @@ export default {
         { title: "Last name", key: "lastName" },
         { title: "Email address", key: "email" }
       ],
+       formfields: [
+        { title: "First name", key: "firstName", type: "text", validate: "required, min(2)" },
+        { title: "Last name", key: "lastName", type: "text", validate: "required, min(2)" },
+        { title: "Email address", key: "email", type: "text", validate: "required, email" }
+      ],
       datas: [],
-      defaultSortKey: "firstname",
+      defaultSortKey: "firstName",
       hiddenTable: true,
+      formdata: {},
       selectedRow: null,
       serverMessage: null
     };
@@ -97,13 +72,8 @@ export default {
   methods: {
     submit() {
         var request = {
-                account: {
-                    id: this.id,
-                    lastName:   this.lastName,
-                    firstName:  this.firstName,
-                    email:      this.email 
-                }
-                }
+                account : this.formdata
+            }
         http.post(config.registrationUrl, request).then(({ data }) => {
             this.hide = false;
             console.log("resp: ",data);
@@ -118,25 +88,42 @@ export default {
 
       this.showModal = false;
     },
+    add(){
+        this.formdata = {};
+      this.showModal = true;
+    },
+    deleteAccounts(selectedRowIds){
+        var request = {
+                accountIds : selectedRowIds
+            }
+        console.log("delete accounts request: ",request);
+        http.post(config.deleteAccountsUrl, request).then(({ data }) => {
+            this.fetch();
+            this.serverMessage = data.message;
+            this.showMessage = true;
+            setTimeout(() => {
+                this.showMessage = false;
+            }, 5000);
+      });
+    },
     fetch() {
       http.get(config.getAccountsUrl).then(({ data }) => {
         this.datas = data.items;
         this.hiddenTable = false;
       });
     },
-    rowClick(row) {
-      console.log(row);
-      this.selectedRow = row;
+    rowClick(row,selectedRows) { 
+        if(selectedRows.length === 0) {
+            this.selectedRow = null;
+        } else {
+            this.selectedRow = selectedRows[selectedRows.length-1];
+        }
     },
     edit(){
         
-        this.lastName = this.selectedRow.lastName;
-        this.firstName = this.selectedRow.firstName;
-        this.id= this.selectedRow.id;
-        this.email= this.selectedRow.email;
+        this.formdata = this.selectedRow;
+         this.show_modal = true;
         this.showModal=true;
-        console.log("ezvan itt: ", this.selectedRow);
-
     }
   }
 };

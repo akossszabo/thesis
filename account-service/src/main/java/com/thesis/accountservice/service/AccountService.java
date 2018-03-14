@@ -75,4 +75,11 @@ public class AccountService{
 		}
 		return accounts;
 	}
+	
+	public void removeAccounts(List<Long> ids) {
+		List<Account> accounts = accountRepo.findAll(ids);
+		if(null != accounts) {
+			accountRepo.delete(accounts);			
+		}
+	}
 }

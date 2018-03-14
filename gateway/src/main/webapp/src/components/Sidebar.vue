@@ -108,6 +108,6 @@ export default {
 .sidebar-sublink {
   @extend .sidebar-link;
   color: $light-black;
-  font-weight: 500;
+  font-weight: 400;
 }
 </style>

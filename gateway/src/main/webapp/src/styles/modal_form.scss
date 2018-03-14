@@ -1,139 +1,4 @@
-/* The Modal (background) */
-.modal {
-    //display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-/* Modal Content */
-.modal-content {
-    position: relative;
-    background-color: #fefefe;
-    margin: auto;
-    padding: 1em;
-    border: 1px solid #888;
-    width: 80%;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-    -webkit-animation-name: animatetop;
-    -webkit-animation-duration: 0.4s;
-    animation-name: animatetop;
-    animation-duration: 0.4s
-}
-
-.error-message {
-  width:25%;
-  padding: 1em;
-  margin: 0 auto 1em;
-  position: fixed;
-  background: #e2726a;
-  color: white;
-  -webkit-animation-name: animatebottom;
-  -webkit-animation-duration: 0.4s;
-  animation-name: animatebottom;
-  animation-duration: 0.4s;
-  bottom: 20px;
-  left: 37.5%;
-}
-.error-message-hide {
-  width:25%;
-  padding: 1em;
-  margin: 0 auto 1em;
-  position: fixed;
-  background: #e2726a;
-  color: white;
-  -webkit-animation-name: animatebottom-hide;
-  -webkit-animation-duration: 0.4s;
-  -webkit-animation-delay: 3s;
-  animation-name: animatebottom-hide;
-  animation-duration: 0.4s;
-  animation-delay: 3s;
-  bottom: 20px;
-  left: 37.5%;
-}
-.closebtn {
-  margin-left: 15px;
-  color: white;
-  font-weight: bold;
-  float: right;
-  font-size: 22px;
-  line-height: 20px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.closebtn:hover {
-  color: black;
-}
-/* Add Animation */
-@-webkit-keyframes animatetop {
-    from {top:-300px; opacity:0} 
-    to {top:0; opacity:1}
-}
-
-@keyframes animatetop {
-    from {top:-300px; opacity:0}
-    to {top:0; opacity:1}
-}
-
-@-webkit-keyframes animatebottom {
-  from {bottom:-300px; opacity:0} 
-  to {bottom:0; opacity:1}
-}
-
-@keyframes animatebottom {
-  from {bottom:-300px; opacity:0}
-  to {bottom:0; opacity:1}
-}
-
-@-webkit-keyframes animatebottom-hide {
-  from {bottom:0px; opacity:1} 
-  to {bottom:-300px; opacity:1}
-}
-
-@keyframes animatebottom-hide {
-  from {bottom:0px; opacity:1}
-  to {bottom:-300px; opacity:1}
-}
-
-/* The Close Button */
-.close {
-    color: white;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.modal-header {
-    padding: 2px 16px;
-    background-color: black;
-    color: white;
-}
-
-.modal-body {padding: 2px 16px;}
-
-.modal-footer {
-    padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
-}
-
 $body-bg: #fff;
-
-// Shadows
 $shadow-inset: inset 0 2px 2px 0 rgba(0, 0, 0, 0.14);
 $shadow-0: 0 0 1px rgba(0, 0, 0, 0);
 $shadow-2: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
@@ -147,12 +12,10 @@ $shadow-6: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12),
 $shadow-8: 0 8px 10px 1px rgba(0, 0, 0, 0.14),
   0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
 
-// Font Sizes
 $mf-font-size: 1rem !default;
 $mf-active-font-size: $mf-font-size * 0.8 !default;
 $mf-active-top: -$mf-font-size !default;
 
-// Margin & Paddings
 $mf-gap: $mf-font-size * 1.5 !default;
 $mf-spacer: $mf-font-size / 8 !default;
 $mf-fieldset-margin: 0 0 $mf-gap * 2 !default;
@@ -160,7 +23,6 @@ $mf-checkbox-gap: $mf-font-size * 2 !default;
 $mf-checkbox-top: 0 !default;
 $mf-radio-margin: $mf-font-size / -4 !default;
 
-// Colors
 $mf-input-color: #333 !default;
 $mf-border-color: #999 !default;
 $mf-label-color: lighten($mf-border-color, 10%) !default;
@@ -168,7 +30,6 @@ $mf-active-color: darken($mf-border-color, 10%) !default;
 $mf-focus-color: #337ab7 !default;
 $mf-error-color: #d9534f !default;
 
-// Animation
 $mf-transition-speed: 0.28s !default;
 
 body,
@@ -203,10 +64,6 @@ h1 {
     color: #666;
     display: block;
   }
-}
-
-.button-container {
-  text-align: center;
 }
 
 // The Styles for the form
