@@ -17,7 +17,7 @@ import com.thesis.accountservice.dto.AccountDto;
 import com.thesis.accountservice.repository.AccountRepository;
 
 @Service
-public class AccountService{
+public class AccountService {
 
 	private static Logger log = LoggerFactory.getLogger(AccountController.class);
 
@@ -28,17 +28,16 @@ public class AccountService{
 	public BCryptPasswordEncoder encoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
-
 	public void createAccount(AccountDto account) {
 		Account acc = null;
-		if(null == account.getId() || null == accountRepo.findOne(account.getId())) {
+		if (null == account.getId() || null == accountRepo.findOne(account.getId())) {
 			acc = new Account();
-		}else {
-			acc = accountRepo.findOne(account.getId());			
+		} else {
+			acc = accountRepo.findOne(account.getId());
 		}
 		acc.setEmail(account.getEmail());
 		acc.setLastName(account.getLastName());
@@ -47,7 +46,7 @@ public class AccountService{
 		String password = generateRandomPassword();
 		acc.setPassword(encoder.encode(password));
 		accountRepo.saveAndFlush(acc);
-		log.debug("Account succesfully created/updated, username: " + acc.getUsername()+ ", id: " + acc.getId());
+		log.debug("Account succesfully created/updated, username: " + acc.getUsername() + ", id: " + acc.getId());
 	}
 
 	private String generateRandomPassword() {
@@ -63,8 +62,8 @@ public class AccountService{
 	public List<AccountDto> getAllAccounts() {
 		List<AccountDto> accounts = new ArrayList<>();
 		List<Account> accs = accountRepo.findAll();
-		if(null!= accs) {
-			for(Account ac : accs) {
+		if (null != accs) {
+			for (Account ac : accs) {
 				AccountDto dto = new AccountDto();
 				dto.setId(ac.getId());
 				dto.setEmail(ac.getEmail());
@@ -75,11 +74,25 @@ public class AccountService{
 		}
 		return accounts;
 	}
-	
+
 	public void removeAccounts(List<Long> ids) {
 		List<Account> accounts = accountRepo.findAll(ids);
-		if(null != accounts) {
-			accountRepo.delete(accounts);			
+		if (null != accounts) {
+			accountRepo.delete(accounts);
 		}
+	}
+
+	public AccountDto getAccountByEmail(String email) {
+		AccountDto dto = new AccountDto();
+		System.out.println("beesett: " + email);
+		Account account = accountRepo.findByEmail(email);
+		if (null != account) {
+			dto.setEmail(account.getEmail());
+			dto.setPassword(account.getPassword());
+			dto.setRole(account.getRole());
+		} else {
+			return null;
+		}
+		return dto;
 	}
 }

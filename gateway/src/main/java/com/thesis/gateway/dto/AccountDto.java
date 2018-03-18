@@ -1,4 +1,4 @@
-package com.thesis.accountservice.dto;
+package com.thesis.gateway.dto;
 
 public class AccountDto extends BaseResponse {
 
@@ -40,6 +40,14 @@ public class AccountDto extends BaseResponse {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getRole() {
 		return role;
@@ -47,13 +55,5 @@ public class AccountDto extends BaseResponse {
 
 	public void setRole(String role) {
 		this.role = role;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 }

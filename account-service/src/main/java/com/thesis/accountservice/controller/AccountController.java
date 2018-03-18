@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thesis.accountservice.dto.AccountDto;
 import com.thesis.accountservice.dto.AccountsResponseDto;
 import com.thesis.accountservice.dto.BaseResponse;
 import com.thesis.accountservice.dto.DeleteAccountsRequestDto;
@@ -58,6 +60,19 @@ public class AccountController {
 		AccountsResponseDto response = new AccountsResponseDto();
 		try {
 			response.setItems(accountService.getAllAccounts());
+			log.debug("get all accounts");
+		} catch (Throwable t) {
+			log.error("error while listing accounts", t);
+			response.setMessage("Something went wrong!");
+		}
+		return response;
+	}
+	
+	@RequestMapping(value = "//principalinfo", method = RequestMethod.GET)
+	public AccountDto getAccountByEmail(@RequestParam("email") String email) {
+		AccountDto response = new AccountDto();
+		try {
+			response = accountService.getAccountByEmail(email);
 			log.debug("get all accounts");
 		} catch (Throwable t) {
 			log.error("error while listing accounts", t);
