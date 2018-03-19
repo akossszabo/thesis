@@ -1,16 +1,27 @@
 <template>
   <div class="app-container">
+    <form_modal 
+      v-show="showModal"
+      :fields="formfields"
+      :formdata="formdata"
+      @onSubmitClick="submit"
+      @onCancelClick="showModal=false">
+    </form_modal>
+
     <apptable 
       v-show="!hiddenTable" 
       :headers="headers" 
-      :datas="datas" 
+      :datas="datas"
       :defaultSortKey="defaultSortKey" 
       :defaultPageSize="50"
       :selectable="true"
       :deletable="true"
       :editable="true"
       :coloredStatus="true"
-      @onRowClick="rowClick">
+      @onRowClick="rowClick"
+      @onAddClick="add"
+      @onDeleteClick="deleteProject"
+      @onEditClick="edit">
       </apptable>
   </div>
 </template>
@@ -19,19 +30,30 @@
 import http from "../http.js";
 import config from "../config.js";
 import apptable from "../components/table/Table.vue";
-
+import form_modal from "../components/FormModal.vue";
 export default {
-  components: { apptable },
+  components: { apptable,form_modal },
 
   data() {
     return {
+       showModal: false,
+      showMessage: false,
       headers: [
         { title: "Name", key: "name" },
-        { title: "Company", key: "company" }
+        { title: "Leader", key: "leader" },
+        { title: "Type", key: "type" }
+      ],
+      formfields: [
+        { title: "Name", key: "name", type: "text", validate: "required, min(2)" },
+        { title: "Project Leader", key: "leader", type: "text", validate: "required, min(2)" },
+        { title: "Type", key: "type", type: "text", validate: "required, min(3)" }
       ],
       datas: [],
       defaultSortKey: "name",
-      hiddenTable: true
+      hiddenTable: true,
+       formdata: {},
+      selectedRow: null,
+      serverMessage: null
     };
   },
 
@@ -40,14 +62,60 @@ export default {
   },
 
   methods: {
+    submit() {
+        var request = {
+                project : this.formdata
+            }
+        http.post(config.createProjectUrl, request).then(({ data }) => {
+            this.hide = false;
+            console.log("resp: ",data);
+            this.serverMessage = data.message;
+            this.showMessage = true;
+            this.fetch();
+
+            setTimeout(() => {
+                this.showMessage = false;
+            }, 5000);
+      });
+
+      this.showModal = false;
+    },
+    add(){
+        this.formdata = {};
+      this.showModal = true;
+    },
+    deleteProject(selectedRowIds){
+        var request = {
+                accountIds : selectedRowIds
+            }
+        console.log("delete accounts request: ",request);
+        http.post(config.deleteAccountsUrl, request).then(({ data }) => {
+            this.fetch();
+            this.serverMessage = data.message;
+            this.showMessage = true;
+            setTimeout(() => {
+                this.showMessage = false;
+            }, 5000);
+      });
+    },
     fetch() {
-      http.get(config.getAllProjects).then(({ data }) => {
+      http.get(config.getAllProjectsUrl).then(({ data }) => {
         this.datas = data.items;
         this.hiddenTable = false;
       });
     },
-    rowClick(row) {
-      console.log(row);
+    rowClick(row,selectedRows) { 
+        if(selectedRows.length === 0) {
+            this.selectedRow = null;
+        } else {
+            this.selectedRow = selectedRows[selectedRows.length-1];
+        }
+    },
+    edit(){
+        
+        this.formdata = this.selectedRow;
+         this.show_modal = true;
+        this.showModal=true;
     }
   }
 };

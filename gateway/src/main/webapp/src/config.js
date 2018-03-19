@@ -3,5 +3,7 @@ export default {
   apiBaseUrl: 'http://localhost:4040/',
   registrationUrl: '/accounts/registration',
   getAccountsUrl: '/accounts/accounts',
-  deleteAccountsUrl: 'accounts/delete'
+  deleteAccountsUrl: '/accounts/delete',
+  getAllProjectsUrl: '/projects/projects',
+  createProjectUrl: '/projects/projects'
 };
