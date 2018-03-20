@@ -1,7 +1,5 @@
 package com.thesis.accountservice.controller;
 
-import java.security.Principal;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +66,7 @@ public class AccountController {
 		return response;
 	}
 	
-	@RequestMapping(value = "//principalinfo", method = RequestMethod.GET)
+	@RequestMapping(value = "/principalinfo", method = RequestMethod.GET)
 	public AccountDto getAccountByEmail(@RequestParam("email") String email) {
 		AccountDto response = new AccountDto();
 		try {
@@ -79,10 +77,5 @@ public class AccountController {
 			response.setMessage("Something went wrong!");
 		}
 		return response;
-	}
-	
-	@RequestMapping(value = "/principal", method = RequestMethod.GET)
-	public Principal getPrincipal(Principal principal) {
-		return principal;
 	}
 }

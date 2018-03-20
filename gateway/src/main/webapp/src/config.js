@@ -5,5 +5,7 @@ export default {
   getAccountsUrl: '/accounts/accounts',
   deleteAccountsUrl: '/accounts/delete',
   getAllProjectsUrl: '/projects/projects',
-  createProjectUrl: '/projects/projects'
+  createProjectUrl: '/projects/projects',
+  loginUrl : '/login',
+  getPrincipal : '/principal'
 };

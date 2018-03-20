@@ -34,6 +34,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 	@Autowired
     private BCryptPasswordEncoder encoder;
 	
+	@Autowired
+	private RESTAuthenticationSuccessHandler authenticationSuccessHandler;
+	
 	@Bean
     public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
@@ -43,10 +46,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		.authorizeRequests()
-		.antMatchers("/", "/*.*","/signup/**","/signin/**","/login*","/**").permitAll()
+		.antMatchers("/login*", "/principal","/**").permitAll()
 		.anyRequest().authenticated()
 		.and()
-		.formLogin().loginPage("/login").defaultSuccessUrl("/",true)
+		.formLogin().loginPage("/login").defaultSuccessUrl("/",true).successHandler(authenticationSuccessHandler)
 		.permitAll()
 		.and()
 		.logout()
@@ -63,13 +66,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 			public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 				String email = authentication.getName();
 				String password = authentication.getCredentials().toString();
-				System.out.println("email: " + email+ ", pw: " + password);
 				List<GrantedAuthority> grantedAuths = new ArrayList<>();
 				AccountDto account = accServiceClient.getAccountByEmail(email);
 				if (account != null) {
 					if (account.getEmail().equalsIgnoreCase(email) && encoder.matches(password,account.getPassword()) ) {
 						grantedAuths.add(new SimpleGrantedAuthority(account.getRole()));
 						Authentication auth = new UsernamePasswordAuthenticationToken(account.getEmail(), password, grantedAuths);
+						
+						System.out.println("email: " + auth.getName()+ ", pw: " + password);
 						return auth;
 					}
 				}

@@ -27,7 +27,8 @@ public class ProjectService {
 
 	@Autowired
 	private CommentRepository commentRepo;
-
+	
+	
 	public List<ProjectDto> getAllProjects() {
 		List<ProjectDto> projectDtos = new ArrayList<>();
 
@@ -51,9 +52,10 @@ public class ProjectService {
 			project = new Project();
 		} else {
 			project = projectRepo.findOne(projectDto.getId());
-			project.setName(projectDto.getName());
-			project.setType(projectDto.getType());
 		}
+		project.setName(projectDto.getName());
+		project.setType(projectDto.getType());
+		System.out.println("project leader: " + projectDto.getLeader());
 		projectRepo.saveAndFlush(project);
 		log.debug("Project succesfully created/updated, name: " + project.getName());
 	}

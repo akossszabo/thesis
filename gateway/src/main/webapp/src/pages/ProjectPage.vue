@@ -49,6 +49,7 @@ export default {
         { title: "Type", key: "type", type: "text", validate: "required, min(3)" }
       ],
       datas: [],
+      account: {},
       defaultSortKey: "name",
       hiddenTable: true,
        formdata: {},
@@ -66,6 +67,7 @@ export default {
         var request = {
                 project : this.formdata
             }
+            request.project.leader = this.account.email;
         http.post(config.createProjectUrl, request).then(({ data }) => {
             this.hide = false;
             console.log("resp: ",data);
@@ -88,7 +90,7 @@ export default {
         var request = {
                 accountIds : selectedRowIds
             }
-        console.log("delete accounts request: ",request);
+        console.log("delete projects request: ",request);
         http.post(config.deleteAccountsUrl, request).then(({ data }) => {
             this.fetch();
             this.serverMessage = data.message;
@@ -102,6 +104,9 @@ export default {
       http.get(config.getAllProjectsUrl).then(({ data }) => {
         this.datas = data.items;
         this.hiddenTable = false;
+      });
+      http.get(config.getPrincipal).then(({ data }) => {
+        this.account = data;
       });
     },
     rowClick(row,selectedRows) { 

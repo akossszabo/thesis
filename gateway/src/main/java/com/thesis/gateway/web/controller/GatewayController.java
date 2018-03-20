@@ -1,34 +1,33 @@
 package com.thesis.gateway.web.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.thesis.gateway.web.dto.DummyDto;
-import com.thesis.gateway.web.dto.ProjectDto;
+import com.thesis.gateway.dto.AccountDto;
+import com.thesis.gateway.service.GatewayService;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
 public class GatewayController {
-	
-	@RequestMapping("/dummy")
-	public DummyDto getTest() {
-		return getDummyData();
-	}
 
-	
-	
-	private DummyDto getDummyData() {
-		DummyDto dummy = new DummyDto();
-		List<ProjectDto> items = new ArrayList<>();
-		ProjectDto project = new ProjectDto();
-		project.setName("Dummy Project");
-		project.setCompany("Dummy Company");
-		items.add(project);
-		dummy.setItems(items);
-		return dummy;
+	@Autowired
+	private GatewayService gatewayService;
+
+	@RequestMapping(value = "/principal", method = RequestMethod.GET)
+	public AccountDto getPrincipal(Authentication auth, HttpServletResponse response) {
+		AccountDto dto = new AccountDto();
+		try {
+			dto = gatewayService.getAccountInfo(auth);
+		} catch (Throwable t) {
+			dto.setMessage("User not found!");
+			response.setStatus(404);
+		}
+		return dto;
 	}
 }

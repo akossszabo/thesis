@@ -28,21 +28,13 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
-    registerWithEureka: false
+    registerWithEureka: true
 management:
   security:
-    enabled: false
+    enabled: true
 
-#security:
-# user:
-#    name: root
-#    password: password
-#  oauth2:
-#    client:
-#      clientId: gateway
-#      clientSecret: secret
-#      accessTokenUri: http://localhost:8084/oauth/token
-#      userAuthorizationUri: http://localhost:8084/oauth/authorize
-#    resource:
-#      loadBalanced: true
-#      userInfoUri: http://localhost:8084/principal
+security:
+ user:
+    name: admin
+    password: admin
+

@@ -38,6 +38,7 @@ public class ProjectController {
 	
 	@RequestMapping(value = "/projects", method = RequestMethod.POST)
 	public BaseResponse createProject(@RequestBody CreateProjectRequestDto request) {
+		
 		BaseResponse response = new BaseResponse();
 		try {
 			projectService.createProject(request.getProject());
