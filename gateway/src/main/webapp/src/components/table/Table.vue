@@ -1,8 +1,16 @@
 <template>
   <div class="maxheight unselectable" ref="tablepage">
 
-    <div  class="search-container">
+    <div class="search-container">
       <span> Search: <input name="query" v-model="filterKey"> </span>
+
+      <span v-for="item in filters" :key="item.key"> {{item.title}}:
+        <select v-model="filterData[item.key]" @change="sortKey = sortKey + ' '"> <!-- WORKAROUND -->
+            <option>All</option>
+            <option v-for="i in item.selects" :key="i">{{i}}</option>
+        </select>
+      </span>
+
       <span style="float: right">
         <button class="newbutton" @click="$emit('onAddClick')">Add</button>
       </span>
@@ -13,7 +21,7 @@
         <button class="newbutton" @click="clearSelectedRows">Clear</button>
       </span>
       <span v-show="selectable && deletable && selectedRows.length > 0" style="float: right">
-        <button class="newbutton" @click="$emit('onDeleteClick',selectedRowIds)">Delete</button>
+        <button class="newbutton" @click="$emit('onDeleteClick')">Delete</button>
       </span>
       <span v-show="selectable && editable && selectedRows.length === 1" style="float: right">
         <button class="newbutton" @click="$emit('onEditClick')">Edit</button>
@@ -41,7 +49,7 @@
             <td v-for="header in headers" :key="header.key" :style="{ width: header.width }" :class=header.bclasses>
               <span :class="{ 'activeStatus': coloredStatus && header.key.toUpperCase() === 'STATUS' && entry[header.key].toUpperCase() === 'ACTIVE', 
                               'inactiveStatus': coloredStatus && header.key.toUpperCase() === 'STATUS'  && entry[header.key].toUpperCase() === 'INACTIVE' }">
-                {{ entry[header.key] }} {{ header.fix }}
+                {{ header.prefix }}{{ entry[header.key] }}{{ header.postfix }}
               </span>  
             </td>
           </tr>
@@ -62,7 +70,6 @@
         entries
       </span>
       <span style="float: right">
-
         <span class="page-span" v-show="selectable && selectedRows.length > 0"> Selected: {{ selectedRows.length }} </span>
         <span class="page-span"> {{ pageNumber }} / {{ maxPage }} [ {{ filteredLength }} ] </span>
         <button class="pager-button" @click="first">
@@ -83,9 +90,8 @@
   </div>
 </template>
 
-<script src="table.js">
-</script>
+<script src="table.js"></script>
 
-<style lang="scss" scoped>
-@import "table.scss";
+<style lang="scss" scoped> 
+@import "table.scss"; 
 </style>

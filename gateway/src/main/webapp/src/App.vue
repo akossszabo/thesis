@@ -1,13 +1,12 @@
 <template>
   <div class="app-main">
-    <headbar>
-      
-    </headbar>
+    <headbar></headbar>
     <div class="app-content">
       <sidebar></sidebar>
       <div class="app-page" :class="{'fullpage': !isSidebarVisible}">
         <router-view></router-view>
       </div>
+      <chat_window></chat_window>
     </div>
   </div>
 </template>
@@ -16,8 +15,9 @@
 import { mapState } from "vuex";
 import headbar from "./components/Headbar.vue";
 import sidebar from "./components/Sidebar.vue";
+import chat_window from "./components/ChatWindow.vue";
 export default {
-  components: { headbar, sidebar },
+  components: { headbar, sidebar, chat_window },
 
   computed: {
     ...mapState(["isSidebarVisible"])
