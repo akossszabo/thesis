@@ -25,9 +25,8 @@ export default {
       headerText: "chat",
       actual: "",
       msg: [
-        { user: "Harry", text: "Te vagy az?", time: "2017/01/12 13:20" },
-        { user: "Steve", text: "Nem!", time: "2017/01/12 13:23" },
-        { user: "Harry", text: "Akkor meg ki vagy? Velem ne szórakozz, mert megbánod! Meg fogod bánni!", time: "2017/01/12 13:25" }
+        { user: "Harry", text: "Hello! ", time: "2017/01/12 13:20" },
+        { user: "Steve", text: "Szia", time: "2017/01/12 13:23" }
       ],
       username: "Harry"
     };

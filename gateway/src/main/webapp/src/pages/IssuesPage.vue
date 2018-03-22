@@ -76,6 +76,7 @@ export default {
 
   created() {
     this.fetch();
+    this.subscribe();
   },
 
   methods: {
@@ -104,6 +105,22 @@ export default {
     },
     submitClick() {
       this.show_modal = false;
+    },
+    subscribe(){
+      var socket = new SockJS('localhost:5050/chatservice');
+      var stompClient = Stomp.over(socket);
+
+
+      stompClient.connect({}, function(frame) {
+          stompClient.subscribe('/topic/1', function(greeting) {
+            alert(greeting);
+          });
+      });
+
+
+      /*stompClient.send("/message/1", {},"hello project" );
+      }*/
+          
     }
   }
 };
