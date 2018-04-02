@@ -26,6 +26,8 @@
       @onSubmitClick="submitClick"
       @onCancelClick="show_modal=false">
       </form_modal>
+
+      <button @click="subscribe">subscribe</button>
   </div>
 </template>
 
@@ -35,9 +37,11 @@ import config from "../config.js";
 import progressbar from "../components/ProgressBar.vue";
 import apptable from "../components/table/Table.vue";
 import form_modal from "../components/FormModal.vue";
+import SockJS from "sockjs-client";
+import Stomp from "webstomp-client";
 
 export default {
-  components: { progressbar, apptable, form_modal },
+  components: { progressbar, apptable, form_modal,SockJS,Stomp },
 
   data() {
     return {
@@ -70,13 +74,17 @@ export default {
       defaultSortKey: "id",
       hiddenTable: true,
       show_modal: false,
-      selectedRow: null
+      selectedRow: null,
+      stompClient: null,
+      socket : null,
+      connected: false,
     };
   },
 
   created() {
-    this.fetch();
-    this.subscribe();
+   // this.fetch();
+    this.connect();
+   
   },
 
   methods: {
@@ -106,22 +114,34 @@ export default {
     submitClick() {
       this.show_modal = false;
     },
+    connect(){
+      this.socket = new SockJS('http://localhost:5050/chatservice');
+      this.stompClient = Stomp.over(this.socket);
+
+      this.stompClient.connect({}, function(frame) {
+         console.log('Connected: ' + frame);
+            
+      });
+      this.connected = true;
+      console.log('beállítva: ' + this.connected);
+      console.log("connected-e : " + this.connected);
+    },
     subscribe(){
-      var socket = new SockJS('localhost:5050/chatservice');
-      var stompClient = Stomp.over(socket);
-
-
-      stompClient.connect({}, function(frame) {
-          stompClient.subscribe('/topic/1', function(greeting) {
+      console.log("connected-e ittis : " + this.connected);
+      if (this.connected) {
+            console.log("try to subscribe.")
+          this.stompClient.subscribe('/topic/1', function(greeting) {
+            console.log("subscribed");
             alert(greeting);
           });
-      });
+          }
 
-
-      /*stompClient.send("/message/1", {},"hello project" );
-      }*/
-          
+      if (this.connected) {
+            this.stompClient.send("/message/1", {},"hello project" );
+              console.log("message send");
+      }
     }
+
   }
 };
 </script>
