@@ -1,34 +1,41 @@
-$blue: #007bff;
-$indigo: #6610f2;
-$purple: #6f42c1;
-$pink: #e83e8c;
-$red: #dc3545;
-$orange: #fd7e14;
-$yellow: #ffc107;
-$green: #28a745;
-$teal: #20c997;
-$cyan: #17a2b8;
-$white: #fff;
-$primary: #007bff;
-$secondary: #868e96;
 $success: #28a745;
 $info: #17a2b8;
 $warning: #ffc107;
 $danger: #dc3545;
-$light: #f8f9fa;
-$dark: #343a40;
 
-$vlight-grey: #eeebeb;
-$light-grey: #c8c9cb;
+$green: #36af47;
+
+$blue: #337ab7;
+$light-blue: lighten($blue, 20%);
+$vlight-blue: lighten($blue, 32%);
+$vvlight-blue: lighten($blue, 42%);
+
+$black: #000000;
+$light-black: lighten($black, 20%);
+
 $grey: #868e96;
+$light-grey: lighten($grey, 20%);
+$vlight-grey: lighten($grey, 32%);
+$vvlight-grey: lighten($grey, 44%);
 
-$light-blue: #86b2e2;
+$yellow: #ff6600;
+$light-yellow: lighten($yellow, 20%);
+$vlight-yellow: lighten($yellow, 32%);
+$vvlight-yellow: lighten($yellow, 42%);
 
-$light-black: #24292e;
-$light-purple:#563d7c;
-$vligt-yellow: rgba(250, 100, 0, 0.267);
-$ligt-yellow: rgba(250, 100, 0, 0.507);
-
+// headbar, sidebar
 $header-background: $light-black;
-$header-textcolor: $light-grey;
+$header-textcolor: $vlight-grey;
 $sidebar-bordercolor: $light-grey;
+$sidebar-hovercolor: $light-yellow;
+$sidebar-selectedcolor: $vlight-yellow;
+$sidebar-lastscolor: $vvlight-yellow;
+
+// table
+$table-head-bgcolor: $light-black;
+$table-head-textcolor: $vlight-grey;
+$table-border-color: $light-grey;
+$table-arrow-color: $grey;
+$table-hover-color: $light-yellow;
+$table-selected-color: $vlight-yellow;
+    

@@ -1,7 +1,5 @@
 <template>
   <div class="app-container">
-    <progressbar v-show="hiddenTable"></progressbar>
-
     <apptable 
       v-show="!hiddenTable" 
       :headers="headers" 
@@ -13,10 +11,13 @@
       :deletable="true"
       :editable="true"
       :coloredStatus="true"
+      :clickableCells="true"
       @onRowClick="rowClick"
+      @onOpenClick="openClick"
       @onEditClick="editClick"
       @onDeleteClick="deleteClick"
-      @onAddClick="addClick">
+      @onAddClick="addClick"
+      @onCellClick="cellClick">
       </apptable>
 
     <form_modal 
@@ -26,28 +27,21 @@
       @onSubmitClick="submitClick"
       @onCancelClick="show_modal=false">
       </form_modal>
-
-      <button @click="subscribe">subscribe</button>
   </div>
 </template>
 
 <script>
 import http from "../http.js";
 import config from "../config.js";
-import progressbar from "../components/ProgressBar.vue";
 import apptable from "../components/table/Table.vue";
 import form_modal from "../components/FormModal.vue";
-import SockJS from "sockjs-client";
-import Stomp from "webstomp-client";
-
 export default {
-  components: { progressbar, apptable, form_modal,SockJS,Stomp },
-
+  components: { apptable, form_modal },
   data() {
     return {
       headers: [
         { title: "Id", key: "id", width: "50px" },
-        { title: "Name", key: "name", bclasses: 'lbold'},
+        { title: "Name", key: "name", bclasses: 'name-column'},
         { title: "Summary", key: "summary", width: "30%", bclasses: 'bold' },
         { title: "Priority", key: "priority" },
         { title: "Type", key: "type" },
@@ -58,7 +52,8 @@ export default {
       datas: [],
       filters: [
         { title: "Priority", key: "priority", selects: ["Low", "Medium", "High"] },
-        { title: "Status", key: "status", selects: ["Todo", "In Progress", "Under Review", "Done", "Cancelled"] }
+        { title: "Type", key: "type", selects: ["Bug", "New Feature"] },
+        { title: "Status", key: "status", selects: ["Todo", "In Progress", "Under Review", "Done", "Cancelled"] },
       ],
       formfields: [
         { title: "Id", key: "id", type: "text", validate: "required" },
@@ -74,19 +69,13 @@ export default {
       defaultSortKey: "id",
       hiddenTable: true,
       show_modal: false,
-      selectedRow: null,
-      stompClient: null,
-      socket : null,
-      connected: false,
+      selectedRow: null
     };
   },
-
   created() {
-   // this.fetch();
-    this.connect();
-   
+    this.$store.commit('setSidebarTitle', 'Issues');
+    this.fetch();
   },
-
   methods: {
     fetch() {
       http.get(config.getAllIssuesUrl).then(({ data }) => {
@@ -105,7 +94,14 @@ export default {
       this.formdata = JSON.parse(JSON.stringify(this.selectedRow));
       this.show_modal = true;
     },
+    openClick(selectedRows) {
+      for (var i = 0; i < selectedRows.length; i++) {
+        let row = selectedRows[i];
+        this.$store.commit('pushLastOpenedIssues', {id:row.id, name:row.name});
+      }
+    },
     deleteClick() {
+      this.$alertError('A törlés még nem működik!')
     },
     addClick() {
       this.formdata = {};
@@ -114,43 +110,26 @@ export default {
     submitClick() {
       this.show_modal = false;
     },
-    connect(){
-      this.socket = new SockJS('http://localhost:5050/chatservice');
-      this.stompClient = Stomp.over(this.socket);
-
-      this.stompClient.connect({}, function(frame) {
-         console.log('Connected: ' + frame);
-            
-      });
-      this.connected = true;
-      console.log('beállítva: ' + this.connected);
-      console.log("connected-e : " + this.connected);
-    },
-    subscribe(){
-      console.log("connected-e ittis : " + this.connected);
-      if (this.connected) {
-            console.log("try to subscribe.")
-          this.stompClient.subscribe('/topic/1', function(greeting) {
-            console.log("subscribed");
-            alert(greeting);
-          });
-          }
-
-      if (this.connected) {
-            this.stompClient.send("/message/1", {},"hello project" );
-              console.log("message send");
+    cellClick(key,value,row) {
+      if(key==='name') {
+        this.$store.commit('pushLastOpenedIssues', {id:row.id, name:row.name});
+        this.$router.push({ name: 'toissue', params: { id: row.id }});
       }
     }
-
   }
 };
 </script>
 
-<style>
-.lbold {
+<style lang="scss">
+@import "../styles/colors.scss";
+.name-column {
     font-weight: 500;
+    color: $blue;
+    &:hover {
+    text-decoration: underline;
+    }
 }
 .bold {
-    font-weight: 700;
+    font-weight: 500;
 }
 </style>

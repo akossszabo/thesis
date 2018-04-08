@@ -130,5 +130,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../styles/modal_form.scss";
+@import "../styles/form-modal.scss";
 </style>

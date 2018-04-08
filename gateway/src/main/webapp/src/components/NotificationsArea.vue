@@ -1,5 +1,5 @@
 <template>
-  <div class="notifications-wrapper">
+  <div class="notifications-wrapper unselectable">
     <transition-group name="slide-fade" tag="div">
       <div :class="item.type" role="alert" :key="index" v-for="(item, index) in notifications" @click="hide(item)">
         <span> {{item.message}} </span>
@@ -10,7 +10,6 @@
 
 <script>
 import { mapState } from "vuex";
-
 export default {
   computed: {
     ...mapState(["notifications"])
@@ -30,14 +29,12 @@ export default {
 
 <style lang="scss" scoped>
 @import "../styles/colors.scss";
-
 .notifications-wrapper {
   position: fixed;
   right: 25px;
   bottom: 25px;
   z-index: 9999;
 }
-
 .alert-success {
   background-color: $green;
   padding: 25px;
@@ -47,7 +44,6 @@ export default {
   border-radius: 4px;
   margin-bottom: 10px;
 }
-
 .alert-error {
   background-color: $danger;
   padding: 25px;
@@ -57,7 +53,6 @@ export default {
   border-radius: 4px;
   margin-bottom: 10px;
 }
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;

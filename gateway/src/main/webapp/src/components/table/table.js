@@ -10,7 +10,9 @@ export default {
     selectable: Boolean,
     deletable: Boolean,
     editable: Boolean,
-    coloredStatus: Boolean
+    coloredStatus: Boolean,
+    clickableCells: Boolean,
+    heightDiff: Number
   },
 
   data() {
@@ -27,7 +29,8 @@ export default {
       bodyHeight: null,
       scollbarWidth: 0,
       selectedRows: [],
-      selectedRowIds: []
+      selectedRowIds: [],
+      heightDifference: null
     };
   },
 
@@ -40,6 +43,7 @@ export default {
         this.filterData[this.filters[i].key] = "All";
       }
     }
+    this.heightDifference = this.heightDiff || 140;
   },
 
   beforeUpdate() {
@@ -128,7 +132,7 @@ export default {
       this.pageNumber = this.maxPage;
     },
     onResize() {
-      this.bodyHeight = this.$refs.tablepage.clientHeight - 155;
+      this.bodyHeight = this.$refs.tablepage.clientHeight - this.heightDifference;
     },
     onRowSelected(entry) {
       var id = entry.id;
@@ -155,6 +159,11 @@ export default {
           }
         });
       }
+    },
+    cellClick(key, value, row) {
+      if(this.clickableCells) {
+        this.$emit('onCellClick', key, value, row);
+      }
     }
   },
 
@@ -169,6 +178,10 @@ export default {
       } else {
         this.pageSize = Number(this.pageSizeText);
       }
+    },
+    datas() {
+      this.selectedRows = [];
+      this.selectedRowIds = [];
     }
   },
 

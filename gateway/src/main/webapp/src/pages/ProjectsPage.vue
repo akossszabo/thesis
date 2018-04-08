@@ -20,6 +20,7 @@
       :coloredStatus="true"
       @onRowClick="rowClick"
       @onAddClick="add"
+      @onOpenClick="openClick"
       @onDeleteClick="deleteProject"
       @onEditClick="edit">
       </apptable>
@@ -123,6 +124,18 @@ export default {
         this.formdata = this.selectedRow;
          this.show_modal = true;
         this.showModal=true;
+    },
+    cellClick(key,value,row) {
+      if(key==='name') {
+        this.$store.commit('pushLastOpenedProjects', {id:row.id, name:row.name});
+        this.$router.push({ name: 'toproject', params: { id: row.id }});
+      }
+    },
+    openClick(selectedRows) {
+      for (var i = 0; i < selectedRows.length; i++) {
+        let row = selectedRows[i];
+        this.$store.commit('pushLastOpenedProjects', {id:row.id, name:row.name});
+      }
     }
   }
 };

@@ -407,7 +407,7 @@ fieldset {
   border: 1px solid currentColor;
   font-size: ($mf-font-size * 1.1);
   color: lighten($mf-focus-color, 10%);
-  margin: ($mf-gap * 2) 0;
+  margin: 1rem 0;
   padding: ($mf-gap / 2) ($mf-gap * 2);
   cursor: pointer;
   transition: background-color $mf-transition-speed ease,

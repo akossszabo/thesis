@@ -1,30 +1,13 @@
 @import "../../styles/layout.scss";
 @import "../../styles/colors.scss";
+@import "../../styles/buttons.scss";
 @import "../../styles/font-awesome/font-awesome.scss";
 
-/*
-$table-head-bgcolor: $vlight-grey;
-$table-head-textcolor: $light-black;
-$table-border-color: $light-grey;
-$arrow-color: $grey;
-
-$table-head-bgcolor: $light-blue;
-$table-head-textcolor: white;
-$table-border-color: $light-grey;
-$arrow-color: white;
-*/
-
-$table-head-bgcolor: $vlight-grey;
-$table-head-textcolor: $light-black;
-$table-border-color: $light-grey;
-$arrow-color: $grey;
-
-$table-header-height: 45px;
+$table-header-height: 30px;
 
 span {
     font-size: 14px;
 }
-
 .page-span {
     padding-right: 15px;
 }
@@ -32,19 +15,14 @@ span {
 input,
 select {
     border: 1px solid $table-border-color;
-    padding: 3px;
-    //border-radius: 3px;
+    padding: 2px;
 }
-
 input {
-    width: 200px;
+    width: 150px;
 }
-
 select {
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
     padding-right: 8px;
+    font-size: 12px;
 }
 
 .pager-button {
@@ -58,19 +36,35 @@ select {
 }
 
 .search-container {
-    margin-bottom: 10px;
-    padding: 8px;
-    //border: 1px solid $table-border-color;
+  font-size: 14px;
+  padding: 10px;
+  height: 45px;
+  border: 1px solid $table-border-color;
+  border-bottom: 0px;
+}
+.table-button-container {
+  float: right;
+  right: 0;
+  z-index: 2;
+  position: absolute;
+  background-color: white;
+  margin-right: 25px;
+  margin-top: -5px;
+  padding: 5px;
 }
 
 .table-container {
-    border: 1px solid $table-border-color;
+  border: 1px solid $table-border-color;
+  border-top: 0px;
+  border-bottom: 0px;
 }
 
 .pager-container {
-    margin-top: 10px;
-    padding: 8px;
-    //border: 1px solid $table-border-color;
+  font-size: 14px;
+  margin-bottom: 10px;
+  padding: 10px;
+  height: 45px;
+  border: 1px solid $table-border-color;
 }
 
 table {
@@ -85,16 +79,15 @@ table {
     }
 
     thead {
-        background-color: $table-head-bgcolor;
+        background-color: $table-head-bgcolor; 
         color: $table-head-textcolor;
-        border-bottom: 1px solid $table-border-color;
-        font-size: 18px;
+        font-size: 14px;
         tr {
             height: $table-header-height;
             border-right-color: $table-head-bgcolor;
             border-right-style: solid;
             th {
-                font-weight: 400;
+                font-weight: 700;
             }
         }
     }
@@ -119,29 +112,21 @@ table {
 
     th, td {
         text-align: left;
-        padding: 4px;
+        padding: 2px;
         white-space: nowrap;
         overflow: hidden;
     }
     
-    tr:nth-child(even) {
-        //background-color: $table-even-color;
-    }
+    /*tr:nth-child(even) {}*/
     
     .datarow {
         &:hover {
-            background-color: $ligt-yellow;
+            background-color: $table-hover-color;
         }
     }
 
     .selectedRow {
-        background-color: $light-blue;
-        .activeStatus {
-            color: black;
-        }
-        .inactiveStatus {
-            color: black;
-        }
+        background-color: $table-selected-color;
     }
 }
 
@@ -154,23 +139,33 @@ table {
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
 }
-
 .asc {
-    border-bottom: 5px solid $arrow-color;
+    border-bottom: 5px solid $table-arrow-color;
 }
-
 .dsc {
-    border-top: 5px solid $arrow-color;
+    border-top: 5px solid $table-arrow-color;
 }
 
-.newbutton {
-    font-size: 18px;
-    padding: 3px 10px;
-    cursor: pointer;
-    color: $light-black;
-    border: 1px solid white;
+@media screen and (max-width: 825px) {
+  #filters {
+    display: none;
+  }
 }
-
-.newbutton:hover {
-    border: 1px solid $table-border-color;
+@media screen and (max-width: 500px) {
+  .table-button-container {
+    display: none;
+  }
+}
+@media screen and (max-width: 430px) {
+  .page-size-container {
+    display: none;
+  }
+}
+@media screen and (max-width: 320px) {
+  .search-container {
+    display: none;
+  }
+  .pager-container {
+    display: none;
+  }
 }

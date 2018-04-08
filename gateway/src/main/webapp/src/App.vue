@@ -1,24 +1,25 @@
 <template>
-  <div class="app-main">
+  <div class="app-main-container">
     <headbar></headbar>
     <div class="app-content">
       <sidebar></sidebar>
       <div class="app-page" :class="{'fullpage': !isSidebarVisible}">
         <router-view></router-view>
       </div>
-      <chat_window></chat_window>
     </div>
+    <notifications></notifications>
+    <chat_window></chat_window>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import headbar from "./components/Headbar.vue";
-import sidebar from "./components/Sidebar.vue";
+import headbar from "./components/HeadBar.vue";
+import sidebar from "./components/SideBar.vue";
+import notifications from "./components/NotificationsArea.vue";
 import chat_window from "./components/ChatWindow.vue";
 export default {
-  components: { headbar, sidebar, chat_window },
-
+  components: { headbar, sidebar, notifications, chat_window },
   computed: {
     ...mapState(["isSidebarVisible"])
   }
@@ -28,17 +29,18 @@ export default {
 <style lang="scss">
 @import "./styles/basics.scss";
 @import "./styles/layout.scss";
-
 .fullpage {
   margin-left: 0;
 }
-
-@media screen and (max-width: 800px) {
-  .app-sidebar {
-    width: 0;
-  }
+@media screen and (max-width: 1230px) {
   .app-page {
     margin-left: 0;
+  }
+  .app-sidebar {
+    width: 0;
+    //display: block;
+    //position: absolute;
+    //z-index: 1000;
   }
 }
 </style>
