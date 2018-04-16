@@ -18,7 +18,7 @@
 <script>
 import { mapState } from "vuex";
 import SockJS from "sockjs-client";
-import Stomp from "webstomp-client";
+import Stomp from "stompjs";
 export default {
   props: {
     projectId: String
@@ -59,10 +59,10 @@ export default {
         username: this.username,
         time: now
       }
-      var msg =  this.username + ";?" + textTrimmed;
-      console.log(JSON.stringify(message));
+
+      console.log(message);
       if (this.connected) {
-            this.stompClient.send("/message/1", {}, message);
+            this.stompClient.send("/message/1", {}, JSON.stringify(message));
       }
       event.target.innerText = "";
       this.scrollToBottom();
