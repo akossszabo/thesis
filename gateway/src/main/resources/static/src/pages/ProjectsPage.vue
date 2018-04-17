@@ -108,9 +108,9 @@ export default {
         this.datas = data.items;
         this.hiddenTable = false;
       });
-      http.get(config.getPrincipal).then(({ data }) => {
+     /* http.get(config.getPrincipal).then(({ data }) => {
         this.account = data;
-      });
+      });*/
     },
     rowClick(row,selectedRows) { 
         if(selectedRows.length === 0) {

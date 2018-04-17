@@ -34,10 +34,10 @@ public class AccountService {
 
 	public void createAccount(AccountDto account) {
 		Account acc = null;
-		if (null == account.getId() || null == accountRepo.findOne(account.getId())) {
+		if (null == account.getId() || null == accountRepo.findById(account.getId())) {
 			acc = new Account();
 		} else {
-			acc = accountRepo.findOne(account.getId());
+			acc = accountRepo.findById(account.getId()).get();
 		}
 		acc.setEmail(account.getEmail());
 		acc.setLastName(account.getLastName());
@@ -76,9 +76,9 @@ public class AccountService {
 	}
 
 	public void removeAccounts(List<Long> ids) {
-		List<Account> accounts = accountRepo.findAll(ids);
+		List<Account> accounts = accountRepo.findAllById(ids);
 		if (null != accounts) {
-			accountRepo.delete(accounts);
+			accountRepo.deleteAll(accounts);
 		}
 	}
 

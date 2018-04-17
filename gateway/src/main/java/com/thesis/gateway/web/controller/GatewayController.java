@@ -3,11 +3,11 @@ package com.thesis.gateway.web.controller;
 import java.util.List;
 import java.util.Random;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,13 +28,13 @@ public class GatewayController {
 	private DiscoveryClient dclient;
 
 	@RequestMapping(value = "/principal", method = RequestMethod.GET)
-	public AccountDto getPrincipal(Authentication auth, HttpServletResponse response) {
+	public AccountDto getPrincipal(Authentication auth, ServerHttpResponse response) {
 		AccountDto dto = new AccountDto();
 		try {
 			dto = gatewayService.getAccountInfo(auth);
 		} catch (Throwable t) {
 			dto.setMessage("User not found!");
-			response.setStatus(404);
+			response.setStatusCode(HttpStatus.NOT_FOUND);
 		}
 		return dto;
 	}

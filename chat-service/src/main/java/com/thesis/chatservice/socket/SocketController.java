@@ -33,6 +33,6 @@ public class SocketController {
 		msg.setProjectId(projectId);
 		msg.setUsername(msg.getUsername());
 		msg.setSendDate(message.getTime());
-		chatRepo.save(msg);
+		chatRepo.saveAndFlush(msg);
 	}
 }

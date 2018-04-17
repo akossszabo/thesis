@@ -1,29 +1,22 @@
 package com.thesis.gateway.configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
 import com.thesis.gateway.client.AccountServiceClient;
-import com.thesis.gateway.dto.AccountDto;
 
 @Configuration
-@EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
+@EnableWebFluxSecurity
+
+public class WebSecurityConfig{
 
 	@Autowired
 	private LogoutSuccessHandler logoutSuccessHandler;
@@ -37,27 +30,38 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 	@Autowired
 	private RESTAuthenticationSuccessHandler authenticationSuccessHandler;
 	
-	@Bean
-    public BCryptPasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
 	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http
-		.authorizeRequests()
-		.antMatchers("/login*", "/principal","/**").permitAll()
-		.anyRequest().authenticated()
-		.and()
-		.formLogin().loginPage("/login").defaultSuccessUrl("/",true).successHandler(authenticationSuccessHandler)
-		.permitAll()
-		.and()
-		.logout()
-		.logoutSuccessHandler(logoutSuccessHandler)
-		.permitAll();
-
-		http.csrf().disable();
+	@Bean
+	SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
+		return http
+			.authorizeExchange()
+				.pathMatchers( "/**").permitAll()
+                
+				//.pathMatchers("/users/{user}/**").access(this::currentUserMatchesPath)
+				.anyExchange().authenticated()
+				.and()
+			.build();
 	}
+	
+	@Bean
+	public MapReactiveUserDetailsService reactiveUserDetailsService() {
+		UserDetails user = User.withDefaultPasswordEncoder().username("user").password("password").roles("USER").build();
+		return new MapReactiveUserDetailsService(user);
+	}
+	
+	/*private Mono<AuthorizationDecision> currentUserMatchesPath(Mono<Authentication> authentication, AuthorizationContext context) {
+		return authentication
+			.map( a -> context.getVariables().get("user").equals(a.getName()))
+			.map( granted -> new AuthorizationDecision(granted));
+	}
+
+	@Bean
+	public MapReactiveUserDetailsService userDetailsRepository() {
+		UserDetails rob = User.withDefaultPasswordEncoder().username("test").password("password").roles("USER").build();
+		UserDetails admin = User.withDefaultPasswordEncoder().username("admin").password("password").roles("USER","ADMIN").build();
+		return new MapReactiveUserDetailsService(rob, admin);
+	}
+	
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -86,5 +90,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 				return authentication.equals(UsernamePasswordAuthenticationToken.class);
 			}
 		});
-	}
+	}*/
 }

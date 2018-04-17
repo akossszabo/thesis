@@ -48,10 +48,10 @@ public class ProjectService {
 
 	public void createProject(ProjectDto projectDto) {
 		Project project = null;
-		if (null == projectDto.getId() || null == projectRepo.findOne(projectDto.getId())) {
+		if (null == projectDto.getId() || null == projectRepo.findById(projectDto.getId())) {
 			project = new Project();
 		} else {
-			project = projectRepo.findOne(projectDto.getId());
+			project = projectRepo.findById(projectDto.getId()).get();
 		}
 		project.setName(projectDto.getName());
 		project.setType(projectDto.getType());

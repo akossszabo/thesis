@@ -67,7 +67,7 @@ export default {
     },
     connect() {
 
-      this.socket = new SockJS(this.chatInstance + "/chat-service");
+      this.socket = new SockJS("/chat-service/chat-service");
       
       this.stompClient = Stomp.over(this.socket);
       

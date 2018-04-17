@@ -8,8 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.hibernate.validator.constraints.Email;
-
 @Entity
 public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -19,7 +17,6 @@ public class Account implements Serializable {
 	private Long id;
 	private String username;
 	private String password;
-	@Email
 	@Column(unique = true)
 	private String email;
 	private String role;
