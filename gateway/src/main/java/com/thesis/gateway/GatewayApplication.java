@@ -3,19 +3,18 @@ package com.thesis.gateway;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableZuulProxy
 @EnableFeignClients
 @EnableWebSecurity
+@EnableZuulProxy
 public class GatewayApplication {
 
 	public static void main(String[] args) {
@@ -24,10 +23,10 @@ public class GatewayApplication {
 	
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
-	    return new WebMvcConfigurerAdapter() {
+	    return new WebMvcConfigurer() {
 	        @Override
 	        public void addCorsMappings(CorsRegistry registry) {
-	            registry.addMapping("/**").allowedOrigins("http://localhost:8080");
+	            registry.addMapping("/**").allowedOrigins("*");
 	        }
 	    };
 	}

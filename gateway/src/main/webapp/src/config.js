@@ -1,11 +1,12 @@
 export default {
   appName: 'Project Manager',
-  apiBaseUrl: 'http://localhost:4040/',
+  apiBaseUrl: 'http://localhost:4040',
   registrationUrl: '/accounts/registration',
   getAccountsUrl: '/accounts/accounts',
   deleteAccountsUrl: '/accounts/delete',
   getAllProjectsUrl: '/projects/projects',
   createProjectUrl: '/projects/projects',
   loginUrl : '/login',
-  getPrincipal : '/principal'
+  getPrincipal : '/principal',
+  getChatInstanceUrl: "/chatinstance"
 };

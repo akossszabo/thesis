@@ -24,6 +24,7 @@ zuul:
     project-service:
       path: /projects/**
       serviceId: project-service
+   
 eureka:
   client:
     serviceUrl:

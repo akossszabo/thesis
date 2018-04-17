@@ -19,51 +19,45 @@
 import { mapState } from "vuex";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
+import moment from "moment";
+import http from "../http.js";
+import config from "../config.js";
 export default {
   props: {
     projectId: String
-    
   },
   data() {
     return {
       showContent: false,
       headerText: "chat",
       actual: "",
-      msg: [
-        { user: "Harry", text: "Te vagy az?", time: "2017/01/12 13:20" },
-        { user: "Steve", text: "Nem!", time: "2017/01/12 13:23" },
-        { user: "Harry", text: "Akkor meg ki vagy? Velem ne szórakozz, mert megbánod! Meg fogod bánni!", time: "2017/01/12 13:25" }
-      ],
-      username: "Harry"
+      msg: [],
+      username: "Harry",
+      chatInstance: ""
     };
   },
-  created(){
-    this.connect();
+  created() {
+    this.getChatInstance();
     var self = this;
-    setTimeout(function(){
-            self.subscribe();            
-            }, 2000);
+    setTimeout(()=>{
+      self.connect();
+},2000);
+    setTimeout()
+
+    
   },
   methods: {
     submit(event) {
-      this.msg.push({
-        user: this.username,
-        text: event.target.innerText.trim(),
-        time: "2017/01/12 13:20"
-      });
-      var now = new Date();
-      var textTrimmed =  event.target.innerText.trim();
 
+      var now = new Date();
+      var textTrimmed = event.target.innerText.trim();
       var message = {
-        text : textTrimmed,
+        text: textTrimmed,
         username: this.username,
         time: now
-      }
-
+      };
       console.log(message);
-      if (this.connected) {
-            this.stompClient.send("/message/1", {}, JSON.stringify(message));
-      }
+      this.stompClient.send("/message/1", {}, JSON.stringify(message));
       event.target.innerText = "";
       this.scrollToBottom();
     },
@@ -71,27 +65,43 @@ export default {
       var element = document.getElementById("messages-area-id");
       element.scrollTop = element.scrollHeight;
     },
-    connect(){
-      this.socket = new SockJS('http://localhost:5050/chatservice');
-      this.stompClient = Stomp.over(this.socket);
+    connect() {
 
-      this.stompClient.connect({}, function(frame) {
-         console.log('Connected: ' + frame);
-            
-      });
-      this.connected = true;
+      this.socket = new SockJS(this.chatInstance + "/chat-service");
+      
+      this.stompClient = Stomp.over(this.socket);
+      
+      this.stompClient.connect({}, this.subscribe);
+      
     },
-    subscribe(){
-      console.log("connected-e ittis : " + this.connected);
-      if (this.connected) {
-            console.log("try to subscribe.")
-          this.stompClient.subscribe('/topic/1', function(greeting) {
-            console.log("subscribed");
+    subscribe(frame) {
+      
+        console.log("try to subscribe.");
+        let pid = this.projectId;
+        this.stompClient.subscribe("/topic/1", this.addMessage);
+
+    },
+
+    addMessage(frame){
+      let message = JSON.parse(frame.body);
+      console.log("megjött: " ,message.username );
+      this.msg.push({
+            user: message.username,
+            text: message.text,
+            time: moment(message.time).format()
           });
-          }
-     
+
+          console.log(this.msg);
+    },
+    getChatInstance(){
+      http.get(config.getChatInstanceUrl).then(({ data }) => {
+        this.chatInstance = data;
+        console.log(this.chatInstance);
+        this.connect();
+      });
     }
   }
+  
 };
 </script>
 

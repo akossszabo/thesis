@@ -1,2 +1,7 @@
-server:
-  port: 5050
+spring:
+  application:
+    name: chat-service
+  cloud:
+    config:
+      uri: http://localhost:8888
+      fail-fast: true
