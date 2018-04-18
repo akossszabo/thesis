@@ -21,7 +21,23 @@ public class Issue implements Serializable{
 	private String summary;
 	private String reporter;
 	private String assignee;
+	private String status;
+	private String name;
+	private String priority;
+	private String type;
 	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -51,6 +67,18 @@ public class Issue implements Serializable{
 	}
 	public void setAssignee(String assignee) {
 		this.assignee = assignee;
+	}
+	public String getPriority() {
+		return priority;
+	}
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 	

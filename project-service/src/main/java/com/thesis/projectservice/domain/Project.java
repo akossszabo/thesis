@@ -20,6 +20,7 @@ public class Project implements Serializable{
 	private String name;
 	private String type;
 	private String leadId;
+	private String summary;
 	
 	@OneToMany(mappedBy = "project")
 	private List<Issue> issues;
@@ -63,6 +64,12 @@ public class Project implements Serializable{
 	}
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
+	}
+	public String getSummary() {
+		return summary;
+	}
+	public void setSummary(String summary) {
+		this.summary = summary;
 	}
 	
 }

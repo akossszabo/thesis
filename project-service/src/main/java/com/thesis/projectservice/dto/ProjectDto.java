@@ -1,11 +1,15 @@
 package com.thesis.projectservice.dto;
 
-public class ProjectDto {
+import java.util.List;
+
+public class ProjectDto extends BaseResponse{
 	
 	private Long id;
 	private String name;
 	private String type;
 	private String leader;
+	private List<IssueDto> items;
+	private String summary;
 	
 	public Long getId() {
 		return id;
@@ -30,6 +34,18 @@ public class ProjectDto {
 	}
 	public void setLeader(String leader) {
 		this.leader = leader;
+	}
+	public List<IssueDto> getItems() {
+		return items;
+	}
+	public void setItems(List<IssueDto> items) {
+		this.items = items;
+	}
+	public String getSummary() {
+		return summary;
+	}
+	public void setSummary(String summary) {
+		this.summary = summary;
 	}
 	
 	

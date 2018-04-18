@@ -72,7 +72,7 @@
       v-show="show_modal" 
       :fields="formfields" 
       :formdata="formdata" 
-      @onSubmitClick="submitClick" 
+      @onSubmitClick="submit" 
       @onCancelClick="show_modal=false">
     </form_modal>
   
@@ -114,14 +114,11 @@ export default {
         { title: "Status", key: "status", selects: ["Todo", "In Progress", "Under Review", "Done", "Cancelled"] },
       ],
       formfields: [
-        { title: "Id", key: "id", type: "text", validate: "required" },
         { title: "Name", key: "name", type: "text", validate: "required, min(3)" },
         { title: "Summary", key: "summary", type: "text", validate: "required, max(100)" },
         { title: "Priority", key: "priority", type: "text" },
         { title: "Type", key: "type", type: "text" },
         { title: "Status", key: "status", type: "text" },
-        { title: "Project", key: "project", type: "text" },
-        { title: "Adding Date", key: "addDate", type: "text" }
       ],
       formdata: {},
       defaultSortKey: "id",
@@ -144,6 +141,25 @@ export default {
     next();
   },
   methods: {
+    submit() {
+        var request = {
+                issue : this.formdata
+                
+            }
+            request.issue.projectId = this.projectId;
+        http.post(config.createIssueUrl, request).then(({ data }) => {
+            this.hide = false;
+            console.log("resp: ",data);
+            this.serverMessage = data.message;
+            this.showMessage = true;
+            this.buildPage(this.projectId);
+
+            setTimeout(() => {
+                this.showMessage = false;
+            }, 5000);
+      });
+      this.showModal = false;
+    },
     buildPage(id) {
       console.log("Build project page: " + id);
       this.hiddenTable = true;
@@ -151,16 +167,11 @@ export default {
       this.selectedRow = null;
       this.projectId = id;
       
-      http.get(config.getAllIssuesUrl).then(({ data }) => {
+      http.get(config.getProjectDetails + "/" + this.projectId).then(({ data }) => {
         this.datas = data.items;
         this.hiddenTable = false;
-        this.projectName = "UNI-Disposal";
-        this.summary =
-          "A Unicredit Bank EDocManagement projektje során bevezetett imaging megoldás hatására a megfelelően digitalizált, "
-          + "és hitelesen archivált dokumentumok papír alapú példányai feleslegessé válnak. "
-          + "Az ilyen papír alapú dokumentumok megsemmisítéséhez igény keletkezett egy olyan támogató rendszerre, "
-          + "ami a szóban forgó papír alapú dokumentumok selejtezését támogatja. Ez a Disposal alkalmazás.";
-          // TODO : this.$store.commit('pushLastOpenedProjects', {id:row.id, name:row.name});
+        this.projectName = data.name;
+        this.summary = data.summary;
       });
     },
     rowClick(row, selectedRows) {

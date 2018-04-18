@@ -8,5 +8,7 @@ export default {
   createProjectUrl: '/project-service/projects',
   loginUrl : '/login',
   getPrincipal : '/principal',
-  getChatInstanceUrl: "/chatinstance"
+  getChatInstanceUrl: "/chatinstance",
+  getProjectDetails : "/project-service/project",
+  createIssueUrl : "/project-service/issues"
 };
