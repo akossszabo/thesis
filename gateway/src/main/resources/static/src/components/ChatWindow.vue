@@ -37,14 +37,7 @@ export default {
     };
   },
   created() {
-    this.getChatInstance();
-    var self = this;
-    setTimeout(()=>{
-      self.connect();
-},2000);
-    setTimeout()
-
-    
+    this.connect();
   },
   methods: {
     submit(event) {
@@ -92,14 +85,8 @@ export default {
           });
 
           console.log(this.msg);
-    },
-    getChatInstance(){
-      http.get(config.getChatInstanceUrl).then(({ data }) => {
-        this.chatInstance = data;
-        console.log(this.chatInstance);
-        this.connect();
-      });
     }
+    
   }
   
 };

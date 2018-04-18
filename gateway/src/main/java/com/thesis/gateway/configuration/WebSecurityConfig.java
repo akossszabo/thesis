@@ -39,8 +39,10 @@ public class WebSecurityConfig{
                 
 				//.pathMatchers("/users/{user}/**").access(this::currentUserMatchesPath)
 				.anyExchange().authenticated()
-				.and()
+				.and().csrf().disable()
 			.build();
+		
+		
 	}
 	
 	@Bean

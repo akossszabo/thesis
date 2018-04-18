@@ -11,19 +11,13 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 50000
-ribbon:
-  eureka:
-    enabled: true
-    
-zuul:
-  ignoredServices: '*'
-  routes:
-    account-service:
-      path: /accounts/**
-      serviceId: account-service
-    project-service:
-      path: /projects/**
-      serviceId: project-service
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
    
 eureka:
   client:
