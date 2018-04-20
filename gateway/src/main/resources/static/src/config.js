@@ -1,6 +1,6 @@
 export default {
   appName: 'Project Manager',
-  apiBaseUrl: 'http://localhost:4040',
+  apiBaseUrl: '/',
   registrationUrl: '/account-service/registration',
   getAccountsUrl: '/account-service/accounts',
   deleteAccountsUrl: '/account-service/delete',

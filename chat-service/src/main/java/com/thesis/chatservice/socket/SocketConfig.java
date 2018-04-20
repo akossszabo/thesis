@@ -1,5 +1,6 @@
 package com.thesis.chatservice.socket;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -10,6 +11,11 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class SocketConfig implements WebSocketMessageBrokerConfigurer {
 
+	@Bean
+	public HttpSessionIdHandshakeInterceptor httpSessionIdHandshakeInterceptor() {
+		return new HttpSessionIdHandshakeInterceptor();
+	}
+	
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.enableSimpleBroker("/topic");
@@ -17,7 +23,7 @@ public class SocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/chat-service").setAllowedOrigins("*").withSockJS()
+		registry.addEndpoint("/chat-service").addInterceptors(httpSessionIdHandshakeInterceptor()).setAllowedOrigins("*").withSockJS()
 				.setClientLibraryUrl("https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js");
 	}
 

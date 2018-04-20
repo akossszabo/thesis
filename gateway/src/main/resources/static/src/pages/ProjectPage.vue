@@ -109,9 +109,9 @@ export default {
       ],
       datas: [],
       filters: [
-        { title: "Priority", key: "priority", selects: ["Low", "Medium", "High"] },
-        { title: "Type", key: "type", selects: ["Bug", "New Feature"] },
-        { title: "Status", key: "status", selects: ["Todo", "In Progress", "Under Review", "Done", "Cancelled"] },
+       // { title: "Priority", key: "priority", selects: ["Low", "Medium", "High"] },
+        //{ title: "Type", key: "type", selects: ["Bug", "New Feature"] },
+        //{ title: "Status", key: "status", selects: ["Todo", "In Progress", "Under Review", "Done", "Cancelled"] },
       ],
       formfields: [
         { title: "Name", key: "name", type: "text", validate: "required, min(3)" },
@@ -121,7 +121,7 @@ export default {
         { title: "Status", key: "status", type: "text" },
       ],
       formdata: {},
-      defaultSortKey: "id",
+      defaultSortKey: "name",
       hiddenTable: true,
       show_modal: false,
       selectedRow: null

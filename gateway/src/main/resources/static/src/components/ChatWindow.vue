@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-wrapper" :class="{ 'shorter-wrapper': !showContent }">
+  <div v-show="wsconnected" class="chat-wrapper" :class="{ 'shorter-wrapper': !showContent }">
     <div class="chat-header unselectable" @click="showContent=!showContent">
       {{headerText}} {{projectId}}
     </div>
@@ -33,7 +33,8 @@ export default {
       actual: "",
       msg: [],
       username: "Harry",
-      chatInstance: ""
+      chatInstance: "",
+      wsconnected: false
     };
   },
   created() {
@@ -41,7 +42,6 @@ export default {
   },
   methods: {
     submit(event) {
-
       var now = new Date();
       var textTrimmed = event.target.innerText.trim();
       var message = {
@@ -59,36 +59,39 @@ export default {
       element.scrollTop = element.scrollHeight;
     },
     connect() {
-
       this.socket = new SockJS("/chat-service/chat-service");
       
+      this.connectWs();
+    },
+    connectWs() {
+      console.log("try to connect...")
       this.stompClient = Stomp.over(this.socket);
-      
-      this.stompClient.connect({}, this.subscribe);
-      
+      this.stompClient.connect({}, this.subscribe, this.onError);
     },
     subscribe(frame) {
-      
-        console.log("try to subscribe.");
-        let pid = this.projectId;
-        this.stompClient.subscribe("/topic/1", this.addMessage);
-
+      console.log("try to subscribe...");
+      let pid = this.projectId;
+      this.stompClient.subscribe("/topic/1",this.addMessage);
+      this.wsconnected = true;
+    },
+    onError(frame) {
+      console.log(frame);
+      console.log("connect failed, try to reconnect...");
+      this.connectWs();
     },
 
-    addMessage(frame){
+    addMessage(frame) {
       let message = JSON.parse(frame.body);
-      console.log("megjött: " ,message.username );
+      console.log("megjött: ", message.username);
       this.msg.push({
-            user: message.username,
-            text: message.text,
-            time: moment(message.time).format()
-          });
+        user: message.username,
+        text: message.text,
+        time: moment(message.time).format()
+      });
 
-          console.log(this.msg);
+      console.log(this.msg);
     }
-    
   }
-  
 };
 </script>
 
