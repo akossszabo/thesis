@@ -10,6 +10,7 @@ export default new Vuex.Store({
     notifications: [],
     lastOpenedProjects: [],
     lastOpenedIssues: [],
+    account: {},
   },
   
   mutations: {
@@ -54,6 +55,11 @@ export default new Vuex.Store({
         }
       }
       state.lastOpenedIssues = temp;
+    },
+    saveCurrentAccount(state,accountParam){
+
+      console.log(accountParam);
+      state.account = accountParam;
     }
   }
 })

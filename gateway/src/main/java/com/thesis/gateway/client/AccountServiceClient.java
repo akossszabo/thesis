@@ -11,6 +11,6 @@ import com.thesis.gateway.dto.AccountDto;
 public interface AccountServiceClient {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/principalinfo")
-	AccountDto getAccountByEmail(@RequestParam("email") String email);
-	
+	public AccountDto getAccountByEmail(@RequestParam("email") String email);
+
 }

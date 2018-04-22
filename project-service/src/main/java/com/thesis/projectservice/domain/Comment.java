@@ -17,25 +17,32 @@ public class Comment implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@ManyToOne
-	private Project project;
+	private Issue issue;
 	private String message;
+	private String person;
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Project getProject() {
-		return project;
+	public Issue getIssue() {
+		return issue;
 	}
-	public void setProject(Project project) {
-		this.project = project;
+	public void setIssue(Issue issue) {
+		this.issue = issue;
 	}
 	public String getMessage() {
 		return message;
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	public String getPerson() {
+		return person;
+	}
+	public void setPerson(String person) {
+		this.person = person;
 	}
 
 }

@@ -87,6 +87,8 @@ public class AccountService {
 		System.out.println("beesett: " + email);
 		Account account = accountRepo.findByEmail(email);
 		if (null != account) {
+			dto.setFirstName(account.getFirstName());
+			dto.setLastName(account.getLastName());
 			dto.setEmail(account.getEmail());
 			dto.setPassword(account.getPassword());
 			dto.setRole(account.getRole());

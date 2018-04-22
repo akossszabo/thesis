@@ -1,6 +1,7 @@
 package com.thesis.projectservice.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -21,12 +22,22 @@ public class Project implements Serializable{
 	private String type;
 	private String leadId;
 	private String summary;
-	
+	private Date creationDate;
+	private String state;
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
 	@OneToMany(mappedBy = "project")
 	private List<Issue> issues;
-	
-	@OneToMany(mappedBy = "project")
-	private List<Comment> comments;
 	
 	
 	public Long getId() {
@@ -58,12 +69,6 @@ public class Project implements Serializable{
 	}
 	public void setIssues(List<Issue> issues) {
 		this.issues = issues;
-	}
-	public List<Comment> getComments() {
-		return comments;
-	}
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
 	}
 	public String getSummary() {
 		return summary;

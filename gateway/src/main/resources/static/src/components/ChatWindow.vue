@@ -6,7 +6,7 @@
     <div class="chat-content" v-show="showContent">
       <div class="messages-area" id="messages-area-id">
         <div class="message" :key="index" v-for="(item, index) in msg">
-          <strong>{{item.user}}</strong>
+          <strong>{{item.username}}</strong>
           <span class="time-span">{{item.time}}</span>
           <br/> {{item.text}} </div>
       </div>
@@ -24,7 +24,8 @@ import http from "../http.js";
 import config from "../config.js";
 export default {
   props: {
-    projectId: String
+    projectId: String,
+    name: String
   },
   data() {
     return {
@@ -32,13 +33,11 @@ export default {
       headerText: "chat",
       actual: "",
       msg: [],
-      username: "Harry",
-      chatInstance: "",
       wsconnected: false
     };
   },
   created() {
-    this.connect();
+    setTimeout(this.connect(), 1000);
   },
   methods: {
     submit(event) {
@@ -46,11 +45,12 @@ export default {
       var textTrimmed = event.target.innerText.trim();
       var message = {
         text: textTrimmed,
-        username: this.username,
+        username: this.name,
         time: now
       };
       console.log(message);
-      this.stompClient.send("/message/1", {}, JSON.stringify(message));
+      let pid = this.projectId;
+      this.stompClient.send("/message/" +pid , {}, JSON.stringify(message));
       event.target.innerText = "";
       this.scrollToBottom();
     },
@@ -66,12 +66,14 @@ export default {
     connectWs() {
       console.log("try to connect...")
       this.stompClient = Stomp.over(this.socket);
+      let pid = this.projectId;
+      this.getFormerMessages(pid);
       this.stompClient.connect({}, this.subscribe, this.onError);
     },
     subscribe(frame) {
       console.log("try to subscribe...");
       let pid = this.projectId;
-      this.stompClient.subscribe("/topic/1",this.addMessage);
+      this.stompClient.subscribe("/topic/"+pid,this.addMessage);
       this.wsconnected = true;
     },
     onError(frame) {
@@ -79,17 +81,22 @@ export default {
       console.log("connect failed, try to reconnect...");
       this.connectWs();
     },
-
     addMessage(frame) {
       let message = JSON.parse(frame.body);
       console.log("megjött: ", message.username);
       this.msg.push({
-        user: message.username,
+        username: message.username,
         text: message.text,
         time: moment(message.time).format()
       });
 
       console.log(this.msg);
+    },
+    getFormerMessages(pid){
+      http.get(config.getFormerMessages +"/" + pid).then(({ data }) => {
+        console.log(data);
+        this.msg = data;
+      });
     }
   }
 };

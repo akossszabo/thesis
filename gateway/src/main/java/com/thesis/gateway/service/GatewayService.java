@@ -14,7 +14,6 @@ public class GatewayService {
 	private AccountServiceClient accountClient;
 
 	public AccountDto getAccountInfo(Authentication auth) {
-		//TODO: 
 		AccountDto dto = accountClient.getAccountByEmail(auth.getName());
 		return dto;
 	}

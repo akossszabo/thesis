@@ -1,5 +1,6 @@
 package com.thesis.projectservice.dto;
 
+import java.util.Date;
 import java.util.List;
 
 public class ProjectDto extends BaseResponse{
@@ -10,7 +11,21 @@ public class ProjectDto extends BaseResponse{
 	private String leader;
 	private List<IssueDto> items;
 	private String summary;
+	private Date creationDate;
+	private String state;
 	
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
 	public Long getId() {
 		return id;
 	}

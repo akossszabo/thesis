@@ -13,7 +13,7 @@ spring:
         default_schema: thesis
         hibernate:
           hbm2ddl:
-            auto: create-drop
+            auto: update
           jdbc:
             lob:
               non_contextual_creation: true

@@ -7,7 +7,7 @@ spring:
     show-sql: true
     properties:
       default_schema: thesis
-      hibernate.hbm2ddl.auto: create-drop
+      hibernate.hbm2ddl.auto: update
 eureka:
   client:
     serviceUrl:

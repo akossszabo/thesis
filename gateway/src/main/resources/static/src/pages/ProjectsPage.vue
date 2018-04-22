@@ -29,13 +29,14 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import http from "../http.js";
 import config from "../config.js";
 import apptable from "../components/table/Table.vue";
 import form_modal from "../components/FormModal.vue";
 
 export default {
-  components: { apptable,form_modal },
+  components: { apptable,form_modal,mapState },
 
   data() {
     return {
@@ -48,8 +49,8 @@ export default {
       ],
       formfields: [
         { title: "Name", key: "name", type: "text", validate: "required, min(2)" },
-        { title: "Project Leader", key: "leader", type: "text", validate: "required, min(2)" },
-        { title: "Type", key: "type", type: "text", validate: "required, min(3)" }
+        { title: "Type", key: "type", type: "select", selects: ["Business", "Software", "Service Desk"], validate: "required, min(3)" },
+        { title: "Summary", key: "summary", type: "text", validate: "required, min(10)" }
       ],
       datas: [],
       account: {},
@@ -108,9 +109,6 @@ export default {
         this.datas = data.items;
         this.hiddenTable = false;
       });
-     /* http.get(config.getPrincipal).then(({ data }) => {
-        this.account = data;
-      });*/
     },
     rowClick(row,selectedRows) { 
         if(selectedRows.length === 0) {

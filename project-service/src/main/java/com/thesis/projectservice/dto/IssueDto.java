@@ -1,6 +1,8 @@
 package com.thesis.projectservice.dto;
 
-public class IssueDto {
+import java.util.List;
+
+public class IssueDto extends BaseResponse{
 
 	private String name;
 	private String type;
@@ -11,6 +13,7 @@ public class IssueDto {
 	private String summary;
 	private Long id;
 	private Long projectId;
+	private List<CommentDto> comments;
 	
 	public String getAssignee() {
 		return assignee;
@@ -66,6 +69,12 @@ public class IssueDto {
 	}
 	public void setProjectId(Long projectId) {
 		this.projectId = projectId;
+	}
+	public List<CommentDto> getComments() {
+		return comments;
+	}
+	public void setComments(List<CommentDto> comments) {
+		this.comments = comments;
 	}
 	
 	

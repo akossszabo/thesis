@@ -4,49 +4,37 @@
       <div class="box">
         <div style="padding-bottom: 5px;">
           <span class="title">{{projectName}}</span>
-          ( id: {{projectId}} )
         </div>
-        {{summary}}
+        Lead : {{project.leader}} 
       </div>
 
       <div id="datas1" class="box">
-        <div>type: Business</div>
-        <div>client: Apple</div>
-        <div>status: Active</div>
-        <div>adding date: 2016/11/11</div>
+        <div>type: {{project.type}}</div>
+        <div>client: {{project.client}}</div>
+        <div>status: {{project.state}}</div>
+        <div>adding date: {{project.creationDate}}</div>
       </div>
 
       <div id="datas2" class="box">
-        <div>issues: 200</div>
-        <div>opened issues: 33</div>
-        <div>active bug: 12</div>
+        <div>issues: {{datas.length}}</div>
+        <div>opened issues: {{openedIssuesNum}}</div>
+        
       </div>
 
       <div id="users" class="box">
-        <div class="title"> Users </div>
-        <div><span class="activity-name">Harry Potter</span> (Lead)</div>
-        <div class="activity-name">Hermione Granger</div>
-        <div class="activity-name">Ronald Weasley</div>
+        <div class="title"> Summary </div>
+        <div><span class="activity-name">{{project.summary}}</span> </div>
+        
       </div>
 
       <div id="act" class="box">
-        <div class="title"> Activity </div>
+        <div class="title">Latest activity </div>
         <div class="activity"><span class="activity-name">Harry Potter</span> started progress on <span class="activity-id">UNEDM-135</span></div>
         <div class="activity"><span class="activity-name">Hermione Granger</span> started progress on <span class="activity-id">UNEDM-134</span></div>
         <div class="activity"><span class="activity-name">Ronald Weasley</span> changed the Assignee to 'Kaszányi Dávid' on <span class="activity-id">UNEDM-136</span></div>
         <div class="activity"><span class="activity-name">Harry Potter</span> started progress on <span class="activity-id">UNEDM-135</span></div>
         <div class="activity"><span class="activity-name">Hermione Granger</span> started progress on <span class="activity-id">UNEDM-134</span></div>
       </div>
-
-      <div>
-        <span style="float: right; margin-left: 5px;">
-          <button class="small-btn blue-btn">Edit</button>
-        </span>
-        <span style="float: right">
-          <button class="small-btn blue-btn">Add Note</button>
-        </span>
-      </div>
-    </div>
 
     <apptable class="apptable-smaller" 
       v-show="!hiddenTable" 
@@ -78,10 +66,12 @@
   
   <chat_window
   :projectId="projectId"
+  :name="username" 
+
   >
   </chat_window>
   </div>
-
+</div>
 </template>
 
 <script>
@@ -93,11 +83,14 @@ import form_modal from "../components/FormModal.vue";
 
 import chat_window from "../components/ChatWindow.vue";
 export default {
-  components: { apptable, form_modal,chat_window },
+  components: { apptable, form_modal, chat_window, mapState },
+  computed: {
+    ...mapState(["account"])
+  },
   data() {
     return {
       projectId: null,
-      projectName: null,
+      project: null,
       summary: null,
       headers: [
         { title: "Name", key: "name", bclasses: "name-column" },
@@ -105,31 +98,80 @@ export default {
         { title: "Priority", key: "priority" },
         { title: "Type", key: "type" },
         { title: "Status", key: "status" },
-        { title: "Adding Date", key: "addDate", hclasses: "hide-date", bclasses: "hide-date" }
+        {
+          title: "Adding Date",
+          key: "addDate",
+          hclasses: "hide-date",
+          bclasses: "hide-date"
+        }
       ],
       datas: [],
+      users: [],
       filters: [
-       // { title: "Priority", key: "priority", selects: ["Low", "Medium", "High"] },
-        //{ title: "Type", key: "type", selects: ["Bug", "New Feature"] },
-        //{ title: "Status", key: "status", selects: ["Todo", "In Progress", "Under Review", "Done", "Cancelled"] },
+        {
+          title: "Priority",
+          key: "priority",
+          selects: ["Low", "Medium", "High"]
+        },
+        { title: "Type", key: "type", selects: ["Bug", "New Feature"] },
+        {
+          title: "Status",
+          key: "status",
+          selects: ["Todo", "In Progress", "In Review", "Done", "Cancelled"]
+        }
       ],
       formfields: [
-        { title: "Name", key: "name", type: "text", validate: "required, min(3)" },
-        { title: "Summary", key: "summary", type: "text", validate: "required, max(100)" },
-        { title: "Priority", key: "priority", type: "text" },
-        { title: "Type", key: "type", type: "text" },
-        { title: "Status", key: "status", type: "text" },
+        {
+          title: "Name",
+          key: "name",
+          type: "text",
+          validate: "required, min(3)"
+        },
+        {
+          title: "Summary",
+          key: "summary",
+          type: "text",
+          validate: "required, max(100)"
+        },
+        {
+          title: "Priority",
+          key: "priority",
+          type: "select",
+          selects: ["Top", "Low"]
+        },
+        {
+          title: "Type",
+          key: "type",
+          type: "select",
+          selects: ["Bug", "New Feature"]
+        },
+        {
+          title: "Assignee",
+          key: "assignee",
+          type: "select",
+          selects: this.users
+        },
+        {
+          title: "Status",
+          key: "status",
+          type: "select",
+          selects: ["Todo", "In Progress", "In Review", "Done", "Cancelled"]
+        }
       ],
       formdata: {},
       defaultSortKey: "name",
       hiddenTable: true,
       show_modal: false,
-      selectedRow: null
+      selectedRow: null,
+      username: "",
+      openedIssuesNum: 0
     };
   },
   created() {
-    this.$store.commit('setSidebarTitle', 'Projects');
-    
+    this.$store.commit("setSidebarTitle", "Projects");
+    console.log("Itt azaccount", this.account);
+    this.getProjectDetails();
+    this.username = this.account.firstName + " " + this.account.lastName;
   },
   mounted() {
     let path = window.location.hash.substring(1);
@@ -137,28 +179,36 @@ export default {
     this.buildPage(patharray[patharray.length - 1]);
   },
   beforeRouteUpdate(to, from, next) {
+    this.projectId = to.params.id;
     this.buildPage(to.params.id);
     next();
   },
   methods: {
     submit() {
-        var request = {
-                issue : this.formdata
-                
-            }
-            request.issue.projectId = this.projectId;
-        http.post(config.createIssueUrl, request).then(({ data }) => {
-            this.hide = false;
-            console.log("resp: ",data);
-            this.serverMessage = data.message;
-            this.showMessage = true;
-            this.buildPage(this.projectId);
+      var request = {
+        issue: this.formdata
+      };
+      request.issue.projectId = this.projectId;
+      request.issue.reporter = this.account.email;
+      http.post(config.createIssueUrl, request).then(({ data }) => {
+        this.hide = false;
+        console.log("resp: ", data);
+        this.serverMessage = data.message;
+        this.showMessage = true;
+        this.buildPage(this.projectId);
 
-            setTimeout(() => {
-                this.showMessage = false;
-            }, 5000);
+        setTimeout(() => {
+          this.showMessage = false;
+        }, 5000);
       });
       this.showModal = false;
+    },
+    calculateOpenedIssues(data) {
+      data.map(function(value, key) {
+        if (value.status !== "Done") {
+          ++this.openedIssuesNum;
+        }
+      });
     },
     buildPage(id) {
       console.log("Build project page: " + id);
@@ -166,13 +216,6 @@ export default {
       this.formdata = {};
       this.selectedRow = null;
       this.projectId = id;
-      
-      http.get(config.getProjectDetails + "/" + this.projectId).then(({ data }) => {
-        this.datas = data.items;
-        this.hiddenTable = false;
-        this.projectName = data.name;
-        this.summary = data.summary;
-      });
     },
     rowClick(row, selectedRows) {
       if (selectedRows.length === 0) {
@@ -180,6 +223,15 @@ export default {
       } else {
         this.selectedRow = selectedRows[selectedRows.length - 1];
       }
+    },
+    getProjectDetails(){
+      http
+        .get(config.getProjectDetails + "/" + this.projectId)
+        .then(({ data }) => {
+          this.datas = data.items;
+          this.project = data;
+          this.calculateOpenedIssues(this.datas);
+        });
     },
     editClick() {
       this.formdata = JSON.parse(JSON.stringify(this.selectedRow));
@@ -264,8 +316,8 @@ export default {
 }
 @media screen and (max-width: 1320px) {
   .info-container {
-     width: 100%;
-     padding-bottom: 1em;
+    width: 100%;
+    padding-bottom: 1em;
   }
   .apptable-smaller {
     width: 100%;
@@ -278,7 +330,8 @@ export default {
   }
 }
 @media screen and (max-height: 750px) {
-  #datas1, #datas2 {
+  #datas1,
+  #datas2 {
     display: none;
   }
 }
@@ -303,7 +356,7 @@ export default {
 }
 @media screen and (max-width: 992px) {
   .hide-date {
-      display: none;
+    display: none;
   }
 }
 </style>

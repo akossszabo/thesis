@@ -16,10 +16,22 @@ import { mapState } from "vuex";
 import headbar from "./components/HeadBar.vue";
 import sidebar from "./components/SideBar.vue";
 import notifications from "./components/NotificationsArea.vue";
+import http from "./http.js";
+import config from "./config.js";
+import store from "./store.js";
 export default {
   components: { headbar, sidebar, notifications },
   computed: {
     ...mapState(["isSidebarVisible"])
+  },
+  created() {
+    http.get(config.getPrincipal).then(({ data }) => {
+      
+        console.log(data);
+         this.$store.commit('saveCurrentAccount', data);
+      });
+    
+    
   }
 };
 </script>

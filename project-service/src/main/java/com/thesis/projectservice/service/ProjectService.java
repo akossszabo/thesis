@@ -1,6 +1,7 @@
 package com.thesis.projectservice.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,9 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thesis.projectservice.domain.Comment;
 import com.thesis.projectservice.domain.Issue;
 import com.thesis.projectservice.domain.Project;
+import com.thesis.projectservice.dto.CommentDto;
 import com.thesis.projectservice.dto.IssueDto;
+import com.thesis.projectservice.dto.IssueStatus;
 import com.thesis.projectservice.dto.ProjectDto;
 import com.thesis.projectservice.repository.CommentRepository;
 import com.thesis.projectservice.repository.IssueRepository;
@@ -29,8 +33,7 @@ public class ProjectService {
 
 	@Autowired
 	private CommentRepository commentRepo;
-	
-	
+
 	public List<ProjectDto> getAllProjects() {
 		List<ProjectDto> projectDtos = new ArrayList<>();
 
@@ -65,7 +68,7 @@ public class ProjectService {
 	public ProjectDto getProjectDetails(Long id) {
 		Project p = projectRepo.getOne(id);
 		ProjectDto dto = new ProjectDto();
-		if(null != p){
+		if (null != p) {
 			dto.setId(p.getId());
 			dto.setLeader(p.getLeadId());
 			dto.setName(p.getName());
@@ -73,10 +76,10 @@ public class ProjectService {
 			dto.setSummary(p.getSummary());
 		}
 		List<Issue> issues = p.getIssues();
-		
-		if(!issues.isEmpty()){
+
+		if (!issues.isEmpty()) {
 			List<IssueDto> items = new ArrayList<>();
-			for(Issue i : issues){
+			for (Issue i : issues) {
 				IssueDto idto = new IssueDto();
 				createIssueDto(items, i, idto);
 			}
@@ -89,19 +92,19 @@ public class ProjectService {
 		idto.setAssignee(i.getAssignee());
 		idto.setStatus(i.getStatus());
 		idto.setReporter(i.getReporter());
-		idto.setAssignee(i.getAssignee());
 		idto.setPriority(i.getPriority());
 		idto.setType(i.getType());
+		idto.setName(i.getName());
+		idto.setId(i.getId());
 		items.add(idto);
 	}
-	
+
 	public void createIssue(IssueDto issueDto) {
 		Issue issue = null;
-		
+
 		if (null == issueDto.getId() || null == issueRepo.findById(issueDto.getId())) {
 			issue = new Issue();
-			
-			
+
 		} else {
 			issue = issueRepo.findById(issueDto.getId()).get();
 		}
@@ -111,11 +114,48 @@ public class ProjectService {
 		issue.setType(issueDto.getType());
 		issue.setPriority(issueDto.getPriority());
 		issue.setReporter(issueDto.getReporter());
-		issue.setStatus(issueDto.getStatus());
+		issue.setStatus(IssueStatus.WAITING.toString());
 		issue.setSummary(issueDto.getSummary());
-		System.out.println("issue assignee: " + issueDto.getAssignee());
+		issue.setAssignee(issueDto.getAssignee());
+		issue.setCreationDate(new Date());
+		
 		issueRepo.saveAndFlush(issue);
 		log.debug("Project succesfully created/updated, name: " + issue.getName());
+	}
+
+	public IssueDto geIssueDetails(Long id) {
+		Issue issue = issueRepo.getOne(id);
+		IssueDto dto = new IssueDto();
+		dto.setAssignee(issue.getAssignee());
+		dto.setName(issue.getName());
+		dto.setPriority(issue.getPriority());
+		dto.setProjectId(issue.getProject().getId());
+		dto.setStatus(issue.getStatus());
+		dto.setType(issue.getType());
+		dto.setReporter(issue.getReporter());
+		dto.setId(issue.getId());
+		dto.setComments(addCommentsToIssueDto(issue.getComments()));
+		return dto;
+	}
+
+	private List<CommentDto> addCommentsToIssueDto(List<Comment> comments) {
+		List<CommentDto> dtos = new ArrayList<>();
+		for (Comment c : comments) {
+			CommentDto dto = new CommentDto();
+			dto.setMessage(c.getMessage());
+			dto.setIssueId(c.getIssue().getId());
+			dtos.add(dto);
+		}
+		return dtos;
+	}
+
+	public void addCommentToIssue(Long id, CommentDto request) {
+		Issue issue = issueRepo.getOne(id);
+		Comment c = new Comment();
+		c.setIssue(issue);
+		c.setMessage(request.getMessage());
+		c.setPerson(request.getUser());
+		commentRepo.saveAndFlush(c);
 	}
 
 }

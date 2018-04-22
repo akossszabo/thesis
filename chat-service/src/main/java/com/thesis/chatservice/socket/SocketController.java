@@ -31,7 +31,7 @@ public class SocketController {
 		ChatMessage msg = new ChatMessage();
 		msg.setMessage(message.getText());
 		msg.setProjectId(projectId);
-		msg.setUsername(msg.getUsername());
+		msg.setUsername(message.getUsername());
 		msg.setSendDate(message.getTime());
 		chatRepo.saveAndFlush(msg);
 	}

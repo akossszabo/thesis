@@ -1,12 +1,15 @@
 package com.thesis.projectservice.domain;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Issue implements Serializable{
@@ -25,7 +28,17 @@ public class Issue implements Serializable{
 	private String name;
 	private String priority;
 	private String type;
+	private Date creationDate;
 	
+	@OneToMany(mappedBy = "issue")
+	private List<Comment> comments;
+	
+	public List<Comment> getComments() {
+		return comments;
+	}
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
 	public String getStatus() {
 		return status;
 	}
@@ -79,6 +92,12 @@ public class Issue implements Serializable{
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 	
 	
