@@ -1,9 +1,9 @@
 <template>
-  <div class="app-container">
+  <div v-if="project != null" class="app-container">
     <div class="info-container" v-show="!hiddenTable">
       <div class="box">
         <div style="padding-bottom: 5px;">
-          <span class="title">{{projectName}}</span>
+          <span class="title">{{project.name}}</span>
         </div>
         Lead : {{project.leader}} 
       </div>
@@ -16,7 +16,7 @@
       </div>
 
       <div id="datas2" class="box">
-        <div>issues: {{datas.length}}</div>
+      <!--  <div>issues: {{datas.length}}</div>-->
         <div>opened issues: {{openedIssuesNum}}</div>
         
       </div>
@@ -35,7 +35,7 @@
         <div class="activity"><span class="activity-name">Harry Potter</span> started progress on <span class="activity-id">UNEDM-135</span></div>
         <div class="activity"><span class="activity-name">Hermione Granger</span> started progress on <span class="activity-id">UNEDM-134</span></div>
       </div>
-
+</div>
     <apptable class="apptable-smaller" 
       v-show="!hiddenTable" 
       :headers="headers" 
@@ -66,11 +66,11 @@
   
   <chat_window
   :projectId="projectId"
-  :name="username" 
+  :name="account.firstName + ' ' + account.lastName" 
 
   >
   </chat_window>
-  </div>
+  
 </div>
 </template>
 
@@ -168,19 +168,20 @@ export default {
     };
   },
   created() {
+    console.log("created");
     this.$store.commit("setSidebarTitle", "Projects");
-    console.log("Itt azaccount", this.account);
-    this.getProjectDetails();
-    this.username = this.account.firstName + " " + this.account.lastName;
-  },
-  mounted() {
     let path = window.location.hash.substring(1);
     let patharray = path.split("/");
-    this.buildPage(patharray[patharray.length - 1]);
+    this.buildPage(patharray[patharray.length-1]);
   },
   beforeRouteUpdate(to, from, next) {
+    console.log("before route update");
     this.projectId = to.params.id;
     this.buildPage(to.params.id);
+    next();
+  },
+   beforeRouteLeave(to, from, next) {
+    console.log("elhagytuk ezt a route-ot");
     next();
   },
   methods: {
@@ -196,19 +197,17 @@ export default {
         this.serverMessage = data.message;
         this.showMessage = true;
         this.buildPage(this.projectId);
-
-        setTimeout(() => {
-          this.showMessage = false;
-        }, 5000);
       });
       this.showModal = false;
     },
     calculateOpenedIssues(data) {
-      data.map(function(value, key) {
-        if (value.status !== "Done") {
-          ++this.openedIssuesNum;
-        }
-      });
+      if(data) {
+        data.map(function(value, key) {
+          if (value.status !== "Done") {
+            ++this.openedIssuesNum;
+          }
+        });
+      }
     },
     buildPage(id) {
       console.log("Build project page: " + id);
@@ -216,6 +215,20 @@ export default {
       this.formdata = {};
       this.selectedRow = null;
       this.projectId = id;
+      this.getProjectDetails();
+      this.username = this.account.firstName + " " + this.account.lastName;
+    },
+    getProjectDetails(){
+      console.log("getProjectDetails")
+      http
+        .get(config.getProjectDetails + "/" + this.projectId)
+        .then(({ data }) => {
+          console.log("datas arrived")
+          this.datas = data.items;
+          this.project = data;
+          this.hiddenTable = false;
+          //this.calculateOpenedIssues(this.datas);
+        });
     },
     rowClick(row, selectedRows) {
       if (selectedRows.length === 0) {
@@ -223,15 +236,6 @@ export default {
       } else {
         this.selectedRow = selectedRows[selectedRows.length - 1];
       }
-    },
-    getProjectDetails(){
-      http
-        .get(config.getProjectDetails + "/" + this.projectId)
-        .then(({ data }) => {
-          this.datas = data.items;
-          this.project = data;
-          this.calculateOpenedIssues(this.datas);
-        });
     },
     editClick() {
       this.formdata = JSON.parse(JSON.stringify(this.selectedRow));
@@ -329,12 +333,12 @@ export default {
     display: none;
   }
 }
-@media screen and (max-height: 750px) {
+/*@media screen and (max-height: 750px) {
   #datas1,
   #datas2 {
     display: none;
   }
-}
+}*/
 @media screen and (max-height: 560px) {
   #act {
     display: none;

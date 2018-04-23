@@ -21,8 +21,8 @@ public class HttpSessionIdHandshakeInterceptor implements HandshakeInterceptor {
 	@Override
 	public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
 			Map<String, Object> attributes) throws Exception {
-		request.getHeaders().add("Connection", "Upgrade");
-		request.getHeaders().add("Upgrade", "WebSocket");
+		request.getHeaders().add("Connection", "upgrade");
+		request.getHeaders().add("Upgrade", "websocket");
 		logger.info("Handshake happened, headers: " + request.getHeaders());
 		response.getHeaders().add("Connection", "Upgrade");
 		response.getHeaders().add("Upgrade", "WebSocket");

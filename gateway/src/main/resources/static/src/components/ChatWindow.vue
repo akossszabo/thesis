@@ -1,5 +1,5 @@
 <template>
-  <div v-show="wsconnected" class="chat-wrapper" :class="{ 'shorter-wrapper': !showContent }">
+  <div v-show="showChat" class="chat-wrapper" :class="{ 'shorter-wrapper': !showContent }">
     <div class="chat-header unselectable" @click="showContent=!showContent">
       {{headerText}} {{projectId}}
     </div>
@@ -27,17 +27,26 @@ export default {
     projectId: String,
     name: String
   },
+  beforeDestroy: function() {
+    console.log("kill interval");
+     console.log("interval beforeDestroy: " + this.interval);
+    clearInterval(this.interval);
+    console.log(window);
+  },
   data() {
     return {
       showContent: false,
       headerText: "chat",
       actual: "",
       msg: [],
-      wsconnected: false
+      showChat: false,
+      wsConnected: false,
+      interval: null,
+      islastArrived: true
     };
   },
   created() {
-    setTimeout(this.connect(), 1000);
+    this.connect();
   },
   methods: {
     submit(event) {
@@ -50,7 +59,11 @@ export default {
       };
       console.log(message);
       let pid = this.projectId;
-      this.stompClient.send("/message/" +pid , {}, JSON.stringify(message));
+      if (this.wsConnected) {
+        this.stompClient.send("/message/" + pid, {}, JSON.stringify(message));
+      } else {
+        this.postMessage(message);
+      }
       event.target.innerText = "";
       this.scrollToBottom();
     },
@@ -60,26 +73,32 @@ export default {
     },
     connect() {
       this.socket = new SockJS("/chat-service/chat-service");
-      
+
       this.connectWs();
     },
     connectWs() {
-      console.log("try to connect...")
+      console.log("try to connect...");
       this.stompClient = Stomp.over(this.socket);
       let pid = this.projectId;
-      this.getFormerMessages(pid);
+      //this.getFormerMessages(pid);
       this.stompClient.connect({}, this.subscribe, this.onError);
     },
     subscribe(frame) {
       console.log("try to subscribe...");
       let pid = this.projectId;
-      this.stompClient.subscribe("/topic/"+pid,this.addMessage);
-      this.wsconnected = true;
+      this.stompClient.subscribe("/topic/" + pid, this.addMessage);
+      this.showChat = true;
+      this.wsConnected = true;
     },
     onError(frame) {
       console.log(frame);
-      console.log("connect failed, try to reconnect...");
-      this.connectWs();
+      console.log("connect failed, polling started");
+      const self = this;
+      this.interval = setInterval(
+        function() {self.getFormerMessages(self.projectId);},1000);
+      console.log("interval after set: " + this.interval);
+      //this.connectWs();
+      this.showChat = true;
     },
     addMessage(frame) {
       let message = JSON.parse(frame.body);
@@ -92,11 +111,26 @@ export default {
 
       console.log(this.msg);
     },
-    getFormerMessages(pid){
-      http.get(config.getFormerMessages +"/" + pid).then(({ data }) => {
-        console.log(data);
-        this.msg = data;
-      });
+    getFormerMessages(pid) {
+      if(this.islastArrived){
+        this.islastArrived = false;
+        http.get(config.getFormerMessages + "/" + pid).then(({ data }) => {
+
+          console.log(data);
+          this.msg = data;
+          this.islastArrived = true;
+        }).catch(function (error) {
+          console.log("hiba történt: ", error);
+      }) ;;
+      }
+    },
+    postMessage(request) {
+      //this.msg.push(request);
+      http
+        .post(config.postMessage + "/" + this.projectId, request)
+        .then(({ data }) => {
+          console.log("message send: ".request);
+        });
     }
   }
 };

@@ -17,13 +17,13 @@ public class MessageService {
 	private ChatMessageRepo repo;
 
 	public List<MessageDto> getFormerMessagesByProject(String projectId) {
-		List<ChatMessage> messages = repo.findByProjectIdOrderBySendDateDesc(projectId);
+		List<ChatMessage> messages = repo.findByProjectIdOrderBySendDate(projectId);
 		return getMessageDtoFromMessages(messages);
 	}
 
 	private List<MessageDto> getMessageDtoFromMessages(List<ChatMessage> messages) {
 		List<MessageDto> dtos = new ArrayList<>();
-		for(ChatMessage m : messages){
+		for (ChatMessage m : messages) {
 			MessageDto dto = new MessageDto();
 			dto.setText(m.getMessage());
 			dto.setUsername(m.getUsername());
@@ -31,6 +31,16 @@ public class MessageService {
 			dtos.add(dto);
 		}
 		return dtos;
+	}
+
+	public List<MessageDto> addMessageToProject(String projectId, MessageDto message) {
+		ChatMessage m = new ChatMessage();
+		m.setSendDate(message.getTime());
+		m.setProjectId(projectId);
+		m.setUsername(message.getUsername());
+		m.setMessage(message.getText());
+		repo.saveAndFlush(m);
+		return new ArrayList<>();
 	}
 
 }

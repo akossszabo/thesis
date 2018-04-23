@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <div class="table-container">
+    <div v-if="datas" class="table-container">
       <table>
 
         <thead>

@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thesis.chatservice.dto.MessageDto;
@@ -28,6 +30,18 @@ public class MessageController {
 		} catch (Throwable t) {
 			messages = new ArrayList<>();
 			log.error("Error while listing former messages, ", t);
+
+		}
+		return messages;
+	}
+	@PostMapping("/messages/{projectId}")
+	public List<MessageDto> postMessageToProject(@PathVariable String projectId, @RequestBody MessageDto message) {
+		List<MessageDto> messages = new ArrayList<>();
+		try {
+			msgService.addMessageToProject(projectId,message);
+		} catch (Throwable t) {
+			messages = new ArrayList<>();
+			log.error("Error while posting  message, ", t);
 
 		}
 		return messages;

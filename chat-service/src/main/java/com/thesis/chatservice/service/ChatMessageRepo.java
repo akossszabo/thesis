@@ -8,7 +8,6 @@ import com.thesis.chatservice.domain.ChatMessage;
 
 public interface ChatMessageRepo extends JpaRepository<ChatMessage,Long>{
 
-
-	public List<ChatMessage> findByProjectIdOrderBySendDateDesc(String projectId);
+	public List<ChatMessage> findByProjectIdOrderBySendDate(String projectId);
 
 }

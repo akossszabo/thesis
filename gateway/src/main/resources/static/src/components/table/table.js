@@ -61,6 +61,10 @@ export default {
 
   computed: {
     filteredData() {
+      if(!this.datas) {
+        return null;
+      }
+
       var filterKey = this.filterKey && this.filterKey.toLowerCase();
       var filterData = this.filterData;
       var filters = this.filters;
@@ -72,11 +76,13 @@ export default {
           var showRow = Object.keys(row).some(function (key) {
             return String(row[key]).toLowerCase().indexOf(filterKey) > -1;
           });
-          for (var i = 0; i < filters.length; i++) {
-            let filterKey = filters[i].key;
-            let filterValue = filterData[filterKey].toLowerCase();
-            if (filterValue != 'all' && filterValue != row[filterKey].toLowerCase()) {
-              showRow = false;
+          if(filters) {
+            for (var i = 0; i < filters.length; i++) {
+              let filterKey = filters[i].key;
+              let filterValue = filterData[filterKey].toLowerCase();
+              if (filterValue != 'all' && filterValue != row[filterKey].toLowerCase()) {
+                showRow = false;
+              }
             }
           }
           return showRow;

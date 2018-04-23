@@ -76,15 +76,14 @@ public class ProjectService {
 			dto.setSummary(p.getSummary());
 		}
 		List<Issue> issues = p.getIssues();
-
+		List<IssueDto> items = new ArrayList<>();
 		if (!issues.isEmpty()) {
-			List<IssueDto> items = new ArrayList<>();
 			for (Issue i : issues) {
 				IssueDto idto = new IssueDto();
 				createIssueDto(items, i, idto);
 			}
-			dto.setItems(items);
 		}
+		dto.setItems(items);
 		return dto;
 	}
 
@@ -118,7 +117,7 @@ public class ProjectService {
 		issue.setSummary(issueDto.getSummary());
 		issue.setAssignee(issueDto.getAssignee());
 		issue.setCreationDate(new Date());
-		
+
 		issueRepo.saveAndFlush(issue);
 		log.debug("Project succesfully created/updated, name: " + issue.getName());
 	}
