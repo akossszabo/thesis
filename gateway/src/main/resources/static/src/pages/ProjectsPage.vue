@@ -45,10 +45,16 @@ export default {
       headers: [
         { title: "Name", key: "name" },
         { title: "Leader", key: "leader" },
-        { title: "Type", key: "type" }
+        { title: "Type", key: "type" },
+        {
+          title: "Adding Date",
+          key: "addDate",
+          hclasses: "hide-date",
+          bclasses: "hide-date"
+        }
       ],
       formfields: [
-        { title: "Name", key: "name", type: "text", validate: "required, min(2)" },
+        { title: "Name", key: "name", type: "text",bclasses: "name-column", validate: "required, min(2)" },
         { title: "Type", key: "type", type: "select", selects: ["Business", "Software", "Service Desk"], validate: "required, min(3)" },
         { title: "Summary", key: "summary", type: "text", validate: "required, min(10)" }
       ],
@@ -118,27 +124,117 @@ export default {
         }
     },
     edit(){
-        
         this.formdata = this.selectedRow;
          this.show_modal = true;
         this.showModal=true;
     },
     cellClick(key,value,row) {
-      if(key==='name') {
-        this.$store.commit('pushLastOpenedProjects', {id:row.id, name:row.name});
-        this.$router.push({ name: 'toproject', params: { id: row.id }});
-      }
+       if (key === "name") {
+        this.$store.commit("pushLastOpenedProjects", {
+          id: row.id,
+          name: row.name
+        });
+        this.$router.push({ name: "toproject", params: { id: row.id } });
+       }
     },
     openClick(selectedRows) {
       for (var i = 0; i < selectedRows.length; i++) {
         let row = selectedRows[i];
         this.$store.commit('pushLastOpenedProjects', {id:row.id, name:row.name});
       }
+
     }
   }
 };
 </script>
-
-<style>
-
+<style lang="scss">
+@import "../styles/colors.scss";
+@import "../styles/buttons.scss";
+.name-column {
+  font-weight: 500;
+  color: $blue;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.bold {
+  font-weight: 500;
+}
+.info-container {
+  font-size: 12px;
+  width: 30%;
+  float: left;
+  max-height: 98%;
+  overflow: auto;
+}
+.box {
+  margin-bottom: 10px;
+  border: 1px solid $table-border-color;
+  padding: 8px;
+}
+.title {
+  font-size: 20px;
+  font-weight: 500;
+  padding-bottom: 5px;
+}
+.activity {
+  padding-bottom: 10px;
+}
+.activity-name {
+  font-weight: 500;
+  color: $blue;
+}
+.activity-id {
+  color: $blue;
+}
+.apptable-smaller {
+  width: 70%;
+  float: right;
+  padding-left: 1em;
+}
+@media screen and (max-width: 1320px) {
+  .info-container {
+    width: 100%;
+    padding-bottom: 1em;
+  }
+  .apptable-smaller {
+    width: 100%;
+    padding-left: 0em;
+  }
+}
+@media screen and (max-width: 300px) {
+  .info-container {
+    display: none;
+  }
+}
+/*@media screen and (max-height: 750px) {
+  #datas1,
+  #datas2 {
+    display: none;
+  }
+}*/
+@media screen and (max-height: 560px) {
+  #act {
+    display: none;
+  }
+}
+@media screen and (max-height: 350px) {
+  #users {
+    display: none;
+  }
+}
+@media screen and (max-height: 300px) {
+  .info-container {
+    display: none;
+  }
+  .apptable-smaller {
+    width: 100%;
+    padding-left: 0em;
+  }
+}
+@media screen and (max-width: 992px) {
+  .hide-date {
+    display: none;
+  }
+}
 </style>

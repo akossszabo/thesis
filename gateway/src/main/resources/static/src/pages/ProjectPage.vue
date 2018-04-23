@@ -57,11 +57,11 @@
     </apptable>
 
     <form_modal
-      v-show="show_modal" 
+      v-show="showModal" 
       :fields="formfields" 
       :formdata="formdata" 
       @onSubmitClick="submit" 
-      @onCancelClick="show_modal=false">
+      @onCancelClick="showModal=false">
     </form_modal>
   
   <chat_window
@@ -161,7 +161,7 @@ export default {
       formdata: {},
       defaultSortKey: "name",
       hiddenTable: true,
-      show_modal: false,
+      showModal: false,
       selectedRow: null,
       username: "",
       openedIssuesNum: 0
@@ -172,6 +172,7 @@ export default {
     this.$store.commit("setSidebarTitle", "Projects");
     let path = window.location.hash.substring(1);
     let patharray = path.split("/");
+    this.fetchUsers();
     this.buildPage(patharray[patharray.length-1]);
   },
   beforeRouteUpdate(to, from, next) {
@@ -196,9 +197,23 @@ export default {
         console.log("resp: ", data);
         this.serverMessage = data.message;
         this.showMessage = true;
-        this.buildPage(this.projectId);
+        this.fetch();
       });
       this.showModal = false;
+    },
+    fetch(){
+      http
+        .get(config.getProjectDetails + "/" + this.projectId)
+        .then(({ data }) => {
+          console.log("datas arrived")
+          this.datas = data.items;
+          this.hiddenTable = false;
+        });
+    },
+    fetchUsers(){
+       http.get(config.getAccountsUrl).then(({ data }) => {
+        this.users = data.items;
+      });
     },
     calculateOpenedIssues(data) {
       if(data) {
@@ -239,7 +254,7 @@ export default {
     },
     editClick() {
       this.formdata = JSON.parse(JSON.stringify(this.selectedRow));
-      this.show_modal = true;
+      this.showModal = true;
     },
     openClick(selectedRows) {
       for (var i = 0; i < selectedRows.length; i++) {
@@ -255,10 +270,10 @@ export default {
     },
     addClick() {
       this.formdata = {};
-      this.show_modal = true;
+      this.showModal = true;
     },
     submitClick() {
-      this.show_modal = false;
+      this.showModal = false;
     },
     cellClick(key, value, row) {
       if (key === "name") {

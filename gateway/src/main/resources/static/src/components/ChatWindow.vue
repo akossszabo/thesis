@@ -46,6 +46,7 @@ export default {
     };
   },
   created() {
+    this.initMessages();
     this.connect();
   },
   methods: {
@@ -111,6 +112,14 @@ export default {
 
       console.log(this.msg);
     },
+    initMessages(){
+      http.get(config.getFormerMessages + "/" + this.projectId).then(({ data }) => {
+          console.log(data);
+          this.msg = data;
+        }).catch(function (error) {
+          console.log("hiba történt: ", error);
+      });
+    },
     getFormerMessages(pid) {
       if(this.islastArrived){
         this.islastArrived = false;
@@ -121,7 +130,7 @@ export default {
           this.islastArrived = true;
         }).catch(function (error) {
           console.log("hiba történt: ", error);
-      }) ;;
+      });
       }
     },
     postMessage(request) {
