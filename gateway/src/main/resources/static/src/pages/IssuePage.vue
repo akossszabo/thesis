@@ -1,42 +1,48 @@
 <template>
-  <div class="app-container">
-    <p>Issue: {{issue.issueName}}</p>
+  <div v-if="issue != null" class="app-container">
+   <div class="info-container" v-show="!hiddenTable">
+      <div class="box">
+        <div style="padding-bottom: 5px;">
+          <span class="title">Issue: {{issue.name}}</span>
+        </div>
+        Assignee : {{issue.assignee}} 
+      </div>
 
-    {{issue.comments}}
-    
-    {{issue.summary}}
-    
-    
-    
-   
-
-   <div id="datas1" class="box">
+       <div  class="box">
         <div>type:  {{issue.type}}</div>
         <div>reporter: {{issue.reporter}}</div>
         <div>status: {{issue.status}}</div>
         <div>assignee: {{issue.assignee}}</div>
-        <div>adding date: {{project.creationDate}}</div>
+        <div>adding date: {{issue.creationDate}}</div>
         <div>priority: {{issue.priority}}</div>
       </div>
-
-  <div>
-        <span style="float: right; margin-left: 5px;">
-          <button class="small-btn blue-btn">Edit</button>
-        </span>
-        <span style="float: right">
-          <button class="small-btn blue-btn">Add Note</button>
-        </span>
+        
+      <div id="users" class="box">
+        <div class="title"> Summary </div>
+        <div><span class="activity-name">{{issue.summary}}</span> </div>
+        
       </div>
 
- <form_modal
-      v-show="show_modal" 
+      </div>
+
+   <comment_section
+    :comments="comments"
+    :issueId="issueId"
+    :issue="issue"
+    :name="account.firstName + ' ' + account.lastName">
+   </comment_section>   
+  <div>
+        <span style="float: right; margin-left: 5px;">
+          <button class="small-btn blue-btn" >Edit</button>
+        </span>
+      </div>
+<form_modal
+      v-show="showModal" 
       :fields="formfields" 
       :formdata="formdata" 
       @onSubmitClick="submit" 
-      @onCancelClick="show_modal=false">
+      @onCancelClick="showModal=false">
     </form_modal>
-  
-
   </div>
 </template>
 
@@ -45,74 +51,64 @@ import { mapState } from "vuex";
 import http from "../http.js";
 import config from "../config.js";
 import form_modal from "../components/FormModal.vue";
-
+import comment_section from "../components/CommentSection.vue";
 export default {
-  components: {  form_modal,mapState },
-   computed: {
+  components: { form_modal, mapState, comment_section },
+  computed: {
     ...mapState(["account"])
-   },
+  },
   data() {
     return {
       issueId: null,
       username: "",
-      formfields: [
-        { title: "Comment", key: "comment", type: "text", validate: "required, min(3)" }
-      ],
-      formdata: {},
       comments: [],
-      // issueName: "",
-      // summary: "",
-      // assignee: "",
-      // reporter: "",
-      // priority: "",
-      // type: "",
       issue: null,
-      show_modal:false
+      showModal: false
     };
   },
   created() {
-    this.$store.commit('setSidebarTitle', 'Issues');
-
+    this.$store.commit("setSidebarTitle", "Issues");
   },
   mounted() {
     let path = window.location.hash.substring(1);
     let patharray = path.split("/");
-    this.buildPage(patharray[patharray.length-1]);
+    this.buildPage(patharray[patharray.length - 1]);
   },
-  beforeRouteUpdate (to, from, next) {
+  beforeRouteUpdate(to, from, next) {
     this.buildPage(to.params.id);
     next();
   },
   methods: {
     submit() {
-        var request = {
-                comment : this.formdata,
-                user : this.account.firstName + " " + this.account.lastName
-                
-            }
-            request.comment.issueId = this.issueId;
-            request.issue.reporter = this.account.email;
-        http.post(config.addCommentUrl +"/"+ this.issueId, request).then(({ data }) => {
-            this.hide = false;
-            console.log("resp: ",data);
-            this.serverMessage = data.message;
-            this.showMessage = true;
-            this.buildPage(this.projectId);
+      var request = {
+        comment: this.formdata,
+        user: this.account.firstName + " " + this.account.lastName
+      };
+      request.comment.issueId = this.issueId;
+      request.issue.reporter = this.account.email;
+      http
+        .post(config.addCommentUrl + "/" + this.issueId, request)
+        .then(({ data }) => {
+          this.hide = false;
+          console.log("resp: ", data);
+          this.serverMessage = data.message;
+          this.showMessage = true;
+          this.buildPage(this.projectId);
 
-            setTimeout(() => {
-                this.showMessage = false;
-            }, 5000);
-      });
+          setTimeout(() => {
+            this.showMessage = false;
+          }, 5000);
+        });
       this.showModal = false;
     },
     buildPage(id) {
       this.issueId = id;
-       http.get(config.getIssueDetails + "/" + this.issueId).then(({ data }) => {
+      http.get(config.getIssueDetails + "/" + this.issueId).then(({ data }) => {
         this.comments = data.comments;
+        console.log("issue comments: ", this.comments);
         this.issue = data;
       });
     }
-   
   }
 };
 </script>
@@ -163,8 +159,8 @@ export default {
 }
 @media screen and (max-width: 1320px) {
   .info-container {
-     width: 100%;
-     padding-bottom: 1em;
+    width: 100%;
+    padding-bottom: 1em;
   }
   .apptable-smaller {
     width: 100%;
@@ -177,7 +173,8 @@ export default {
   }
 }
 @media screen and (max-height: 750px) {
-  #datas1, #datas2 {
+  #datas1,
+  #datas2 {
     display: none;
   }
 }
@@ -202,7 +199,7 @@ export default {
 }
 @media screen and (max-width: 992px) {
   .hide-date {
-      display: none;
+    display: none;
   }
 }
 </style>

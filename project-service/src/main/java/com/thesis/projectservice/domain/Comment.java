@@ -1,6 +1,7 @@
 package com.thesis.projectservice.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,8 @@ public class Comment implements Serializable{
 	private Issue issue;
 	private String message;
 	private String person;
+	private Date sendDate;
+	
 	public Long getId() {
 		return id;
 	}
@@ -43,6 +46,12 @@ public class Comment implements Serializable{
 	}
 	public void setPerson(String person) {
 		this.person = person;
+	}
+	public Date getSendDate() {
+		return sendDate;
+	}
+	public void setSendDate(Date sendDate) {
+		this.sendDate = sendDate;
 	}
 
 }

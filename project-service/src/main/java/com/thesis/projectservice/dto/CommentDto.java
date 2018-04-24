@@ -1,10 +1,13 @@
 package com.thesis.projectservice.dto;
 
+import java.util.Date;
+
 public class CommentDto {
 	
 	private Long issueId;
 	private String message;
 	private String user;
+	private Date sendDate;
 	
 	public String getMessage() {
 		return message;
@@ -29,6 +32,13 @@ public class CommentDto {
 	public void setUser(String user) {
 		this.user = user;
 	}
-	
+
+	public Date getSendDate() {
+		return sendDate;
+	}
+
+	public void setSendDate(Date sendDate) {
+		this.sendDate = sendDate;
+	}
 	
 }

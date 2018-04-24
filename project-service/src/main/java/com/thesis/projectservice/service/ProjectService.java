@@ -133,6 +133,7 @@ public class ProjectService {
 		dto.setType(issue.getType());
 		dto.setReporter(issue.getReporter());
 		dto.setId(issue.getId());
+		dto.setCreationDate(issue.getCreationDate());
 		dto.setComments(addCommentsToIssueDto(issue.getComments()));
 		return dto;
 	}
@@ -143,6 +144,7 @@ public class ProjectService {
 			CommentDto dto = new CommentDto();
 			dto.setMessage(c.getMessage());
 			dto.setIssueId(c.getIssue().getId());
+			dto.setSendDate(c.getSendDate());
 			dtos.add(dto);
 		}
 		return dtos;
@@ -154,6 +156,7 @@ public class ProjectService {
 		c.setIssue(issue);
 		c.setMessage(request.getMessage());
 		c.setPerson(request.getUser());
+		c.setSendDate(new Date());
 		commentRepo.saveAndFlush(c);
 	}
 

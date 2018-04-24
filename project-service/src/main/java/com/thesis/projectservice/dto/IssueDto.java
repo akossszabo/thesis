@@ -1,5 +1,6 @@
 package com.thesis.projectservice.dto;
 
+import java.util.Date;
 import java.util.List;
 
 public class IssueDto extends BaseResponse{
@@ -13,6 +14,8 @@ public class IssueDto extends BaseResponse{
 	private String summary;
 	private Long id;
 	private Long projectId;
+	private Date creationDate;
+	
 	private List<CommentDto> comments;
 	
 	public String getAssignee() {
@@ -75,6 +78,12 @@ public class IssueDto extends BaseResponse{
 	}
 	public void setComments(List<CommentDto> comments) {
 		this.comments = comments;
+	}
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 	
 	
