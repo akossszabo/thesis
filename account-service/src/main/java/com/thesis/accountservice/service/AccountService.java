@@ -97,4 +97,8 @@ public class AccountService {
 		}
 		return dto;
 	}
+
+	public Long getUserNumber() {
+		return accountRepo.count();
+	}
 }

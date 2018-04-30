@@ -7,14 +7,13 @@ spring:
     show-sql: true
     properties:
       default_schema: thesis
-      hibernate.hbm2ddl.auto: update
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${DISCOVERY_URL:http://localhost:8761}/eureka/
-  instance:
-    leaseRenewalIntervalInSeconds: 1
-    leaseExpirationDurationInSeconds: 2
+      hibernate:
+        hbm2ddl:
+          auto: update
+        jdbc:
+            lob:
+              non_contextual_creation: true
+ 
 logging:
   level:
     org:

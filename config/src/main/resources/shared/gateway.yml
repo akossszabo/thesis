@@ -1,16 +1,5 @@
 server:
   port: 4040
-  session:
-    cookie:
-      name: UISESSION
-      
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 50000
 
 spring:
   cloud:
@@ -19,17 +8,4 @@ spring:
         locator:
           enabled: true
    
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-    registerWithEureka: true
-management:
-  security:
-    enabled: true
-
-security:
- user:
-    name: admin
-    password: admin
 

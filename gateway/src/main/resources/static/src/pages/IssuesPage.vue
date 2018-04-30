@@ -39,15 +39,19 @@ export default {
   components: { apptable, form_modal },
   data() {
     return {
-      headers: [
-        { title: "Id", key: "id", width: "50px" },
-        { title: "Name", key: "name", bclasses: 'name-column'},
-        { title: "Summary", key: "summary", width: "30%", bclasses: 'bold' },
+       headers: [
+        { title: "Id", key: "id"}, 
+        { title: "Name", key: "name", bclasses: "name-column" },
+        { title: "Summary", key: "summary", width: "30%", bclasses: "bold" },
         { title: "Priority", key: "priority" },
         { title: "Type", key: "type" },
         { title: "Status", key: "status" },
-        { title: "Project", key: "project" },
-        { title: "Adding Date", key: "addDate" }
+        {
+          title: "Adding Date",
+          key: "addDate",
+          hclasses: "hide-date",
+          bclasses: "hide-date"
+        }
       ],
       datas: [],
       filters: [
@@ -56,14 +60,42 @@ export default {
         { title: "Status", key: "status", selects: ["Todo", "In Progress", "Under Review", "Done", "Cancelled"] },
       ],
       formfields: [
-        { title: "Id", key: "id", type: "text", validate: "required" },
-        { title: "Name", key: "name", type: "text", validate: "required, min(3)" },
-        { title: "Summary", key: "summary", type: "text", validate: "required, max(100)" },
-        { title: "Priority", key: "priority", type: "text" },
-        { title: "Type", key: "type", type: "text" },
-        { title: "Status", key: "status", type: "text" },
-        { title: "Project", key: "project", type: "text" },
-        { title: "Adding Date", key: "addDate", type: "text"}
+        {
+          title: "Name",
+          key: "name",
+          type: "text",
+          validate: "required, min(3)"
+        },
+        {
+          title: "Summary",
+          key: "summary",
+          type: "text",
+          validate: "required, max(100)"
+        },
+        {
+          title: "Priority",
+          key: "priority",
+          type: "select",
+          selects: ["Top", "Low"]
+        },
+        {
+          title: "Type",
+          key: "type",
+          type: "select",
+          selects: ["Bug", "New Feature"]
+        },
+        {
+          title: "Assignee",
+          key: "assignee",
+          type: "select",
+          selects: this.users
+        },
+        {
+          title: "Status",
+          key: "status",
+          type: "select",
+          selects: ["Todo", "In Progress", "In Review", "Done", "Cancelled"]
+        }
       ],
       formdata: {},
       defaultSortKey: "id",
@@ -100,8 +132,15 @@ export default {
         this.$store.commit('pushLastOpenedIssues', {id:row.id, name:row.name});
       }
     },
-    deleteClick() {
-      this.$alertError('A törlés még nem működik!')
+    deleteClick(selectedRowIds) {
+        var request = {
+                issueIds : selectedRowIds
+            }
+        console.log("delete issues request: ",request);
+        http.post(config.deleteIssuesUrl, request).then(({ data }) => {
+            this.fetch();
+            
+      });
     },
     addClick() {
       this.formdata = {};

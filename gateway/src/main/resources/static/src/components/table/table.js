@@ -149,6 +149,7 @@ export default {
         } else {
           this.selectedRowIds.push(id);
           this.selectedRows.push(entry);
+          console.log("selected row ids: ", this.selectedRowIds);
         }
       }
     },

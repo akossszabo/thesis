@@ -2,16 +2,16 @@
   <div class="app-container">
     <div class="row">
       <div class="column">
-        <infobox title="New Orders" info="112"></infobox>
+        <infobox title="Projects" :info="projectNumber"></infobox>
       </div>
       <div class="column">
-        <infobox title="Today's Sales" info="223"></infobox>
+        <infobox title="Users" :info="userNumber"></infobox>
       </div>
       <div class="column">
-        <infobox title="Today's Visits" info="12345"></infobox>
+        <infobox title="Issues" :info="issueNumber"></infobox>
       </div>
       <div class="column">
-        <infobox class="last-infobox" title="Messages" info="210"></infobox>
+        <infobox class="last-infobox" title="Comments" :info="commentNumber"></infobox>
       </div>
     </div>
   </div>
@@ -19,8 +19,29 @@
 
 <script>
 import infobox from "../components/InfoBox.vue";
+import http from "../http.js";
+import config from "../config.js";
 export default {
   components: { infobox }
+
+ ,data(){
+   return {
+      userNumber: 0,
+      commentNumber: 0,
+      projectNumber: 0,
+      issueNumber: 0
+    };
+
+ },
+ created(){
+   this.$store.commit('setSidebarTitle', 'Dashboard');
+    http.get(config.getStatInfo).then(({ data }) => {
+            this.userNumber = data.userNumber;
+            this.commentNumber = data.commentNumber;
+            this.issueNumber = data.issueNumber;
+            this.projectNumber = data.projectNumber;
+          });
+ }
 };
 </script>
 

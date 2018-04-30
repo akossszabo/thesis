@@ -265,8 +265,16 @@ export default {
         });
       }
     },
-    deleteClick() {
-      this.$alertError("A törlés még nem működik!");
+    deleteClick(selectedRowIds) {
+       console.log("delete issues request: ",selectedRowIds);
+      var request = {
+                issueIds : selectedRowIds
+            }
+       
+        http.post(config.deleteIssuesUrl, request).then(({ data }) => {
+            this.fetch();
+            
+      });
     },
     addClick() {
       this.formdata = {};

@@ -1,5 +1,7 @@
 package com.thesis.projectservice.service;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,13 +11,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thesis.projectservice.client.AccountServiceClient;
+import com.thesis.projectservice.client.GatewayClient;
 import com.thesis.projectservice.domain.Comment;
 import com.thesis.projectservice.domain.Issue;
 import com.thesis.projectservice.domain.Project;
+import com.thesis.projectservice.dto.AccountDto;
 import com.thesis.projectservice.dto.CommentDto;
 import com.thesis.projectservice.dto.IssueDto;
 import com.thesis.projectservice.dto.IssueStatus;
+import com.thesis.projectservice.dto.IssuesResponseDto;
 import com.thesis.projectservice.dto.ProjectDto;
+import com.thesis.projectservice.dto.StatisticsDto;
 import com.thesis.projectservice.repository.CommentRepository;
 import com.thesis.projectservice.repository.IssueRepository;
 import com.thesis.projectservice.repository.ProjectRepository;
@@ -24,7 +31,12 @@ import com.thesis.projectservice.repository.ProjectRepository;
 public class ProjectService {
 
 	private static Logger log = LoggerFactory.getLogger(ProjectService.class);
-
+	@Autowired
+	private GatewayClient gatewayClient;
+	
+	@Autowired
+	private AccountServiceClient accountClient;
+	
 	@Autowired
 	private ProjectRepository projectRepo;
 
@@ -44,7 +56,8 @@ public class ProjectService {
 				dto.setId(p.getId());
 				dto.setName(p.getName());
 				dto.setType(p.getType());
-				dto.setLeader(p.getLeadId());
+				AccountDto account = accountClient.getAccountByEmail(p.getLeadId());
+				dto.setLeader(account.getFirstName() + " " +account.getLastName());
 				projectDtos.add(dto);
 			}
 		}
@@ -60,6 +73,8 @@ public class ProjectService {
 		}
 		project.setName(projectDto.getName());
 		project.setType(projectDto.getType());
+		project.setLeadId(gatewayClient.getAccount().getEmail());
+		project.setCreationDate(new Date());
 		System.out.println("project leader: " + projectDto.getLeader());
 		projectRepo.saveAndFlush(project);
 		log.debug("Project succesfully created/updated, name: " + project.getName());
@@ -70,7 +85,8 @@ public class ProjectService {
 		ProjectDto dto = new ProjectDto();
 		if (null != p) {
 			dto.setId(p.getId());
-			dto.setLeader(p.getLeadId());
+			AccountDto account = accountClient.getAccountByEmail(p.getLeadId());
+			dto.setLeader(account.getFirstName() + " " +account.getLastName());
 			dto.setName(p.getName());
 			dto.setType(p.getType());
 			dto.setSummary(p.getSummary());
@@ -134,6 +150,7 @@ public class ProjectService {
 		dto.setReporter(issue.getReporter());
 		dto.setId(issue.getId());
 		dto.setCreationDate(issue.getCreationDate());
+		dto.setSummary(issue.getSummary());
 		dto.setComments(addCommentsToIssueDto(issue.getComments()));
 		return dto;
 	}
@@ -145,6 +162,7 @@ public class ProjectService {
 			dto.setMessage(c.getMessage());
 			dto.setIssueId(c.getIssue().getId());
 			dto.setSendDate(c.getSendDate());
+			dto.setUser(c.getPerson());
 			dtos.add(dto);
 		}
 		return dtos;
@@ -160,4 +178,54 @@ public class ProjectService {
 		commentRepo.saveAndFlush(c);
 	}
 
+	public IssuesResponseDto getAllIssues() {
+		IssuesResponseDto response = new IssuesResponseDto();
+		List<Issue> issues = issueRepo.findByOrderByCreationDate();
+		List<IssueDto> responseItems = new ArrayList<>();
+		for(Issue issue : issues) {
+			IssueDto dto = new IssueDto();
+			dto.setAssignee(issue.getAssignee());
+			dto.setName(issue.getName());
+			dto.setPriority(issue.getPriority());
+			dto.setProjectId(issue.getProject().getId());
+			dto.setStatus(issue.getStatus());
+			dto.setType(issue.getType());
+			dto.setReporter(issue.getReporter());
+			dto.setId(issue.getId());
+			dto.setCreationDate(issue.getCreationDate());
+			dto.setComments(addCommentsToIssueDto(issue.getComments()));
+			responseItems.add(dto);
+		}
+		response.setItems(responseItems);
+		return response;
+	}
+
+	public StatisticsDto getStatInfo() {
+		StatisticsDto dto = new StatisticsDto();
+		dto.setCommentNumber(commentRepo.count());
+		dto.setProjectNumber(projectRepo.count());
+		dto.setIssueNumber(issueRepo.count());
+		return dto;
+	}
+
+	public void removeProjects(List<Long> projectIds) {
+		List<Project> projects = projectRepo.findAllById(projectIds);
+		for(Project p : projects) {
+			for(Issue i : p.getIssues()) {
+				commentRepo.deleteAll(i.getComments());
+			}
+			issueRepo.deleteAll(p.getIssues());
+		}
+		projectRepo.deleteAll(projects);
+	}
+
+	public void removeIssues(List<Long> issueIds) {
+		List<Issue> issues = issueRepo.findAllById(issueIds);
+		for(Issue i : issues) {
+			commentRepo.deleteAll(i.getComments());
+		}
+		issueRepo.deleteAll(issues);
+		
+	}
+	
 }

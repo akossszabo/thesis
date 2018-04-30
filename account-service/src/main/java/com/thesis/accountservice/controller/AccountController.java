@@ -78,4 +78,14 @@ public class AccountController {
 		}
 		return response;
 	}
+	@RequestMapping(value = "/usernumber", method = RequestMethod.GET)
+	public Long getUserNumber() {
+		try {
+			log.debug("get account number");
+			return accountService.getUserNumber();
+		} catch (Throwable t) {
+			log.error("error while get account number", t);
+		}
+		return 0L;
+	}
 }

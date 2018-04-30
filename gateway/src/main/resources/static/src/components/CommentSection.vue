@@ -1,34 +1,34 @@
 <template>
 <div>
-  <div class="chat-wrapper">
-      <div class="chat-header" @click="showContent=!showContent">
-        Comments
+  <div class="comment-wrapper">
+    <div class="header">
+      Comments
+       <span style="float: right">
+        <button class="small-btn blue-btn" @click="showModal=true">NEW</button>
+      </span>
+    </div>
+
+    <div class="comment" v-if="comments" :key="index" v-for="(item, index) in comments">
+      <div class="comment-title">
+        <span class="title-name">{{item.user}} - </span>
+        <span class="title-date">{{item.sendDate}}</span>
       </div>
-    <div class="chat-content">
-      <div class="messages-area" id="messages-area-id">
-        <div v-if="comments" class="message" :key="index" v-for="(item, index) in comments">
-          <strong>{{item.user}}</strong>
-          <span class="time-span">{{item.sendDate}}</span>
-          <br/> {{item.message}} 
-        </div>
+      <div class="comment-content">
+        {{item.message}}
       </div>
     </div>
-     <form_modal
+  </div>
+
+    <form_modal
       v-show="showModal" 
       :fields="formfields" 
       :formdata="formdata" 
       @onSubmitClick="submit" 
       @onCancelClick="showModal=false">
-       </form_modal>
-    </div>
-     <span style="float: right">
-          <button class="small-btn blue-btn" @click="showModal=true">Add Comment</button>
-        </span>
-
-    
-    </div>
+    </form_modal>
+</div>
 </template>
-
+[]
 <script>
 import { mapState } from "vuex";
 import moment from "moment";
@@ -84,64 +84,31 @@ export default {
 
 <style lang="scss" scoped>
 @import "../styles/colors.scss";
-.chat-wrapper {
-  position: fixed;
-  width: 700px;
-  font-size: 12px;
-  right: 80px;
-  bottom: 80px;
-  z-index: 8888;
-  border: 1px solid $light-grey;
-  border-radius: 0px 0px 0px 0px;
+.comment-wrapper {
+  float: right;
+  font-size: 14px;
+  border: 1px solid $table-border-color;
+  border-bottom: 0;
+  width: 100%;
 }
-@media screen and (max-width: 600px) {
-  .chat-wrapper {
-    width: 300px;
-  }
+.header {
+  font-size: 16px;
+  border-bottom: 1px solid $table-border-color;
+  padding: 10px;
+  font-weight: 600;
 }
-@media screen and (max-width: 400px) {
-  .chat-wrapper {
-    width: 250px;
-  }
+.comment {
+  border-bottom: 1px solid $table-border-color;
+  padding: 5px;
 }
-@media screen and (max-width: 325px) {
-  .chat-wrapper {
-    display: none;
-  }
+.comment-title {
+  padding-bottom: 5px;
 }
-.shorter-wrapper {
-  width: 150px;
+.title-name {
+  font-weight: 600;
+  color: $blue;
 }
-.chat-header {
-  background-color: lighten($blue, 10%);
-  padding: 2px;
-  padding-left: 5px;
-  border-radius: 0px 0px 0px 0px;
-  cursor: pointer;
-  color: white;
-  font-size: 13px;
-  font-weight: 500;
-}
-.chat-content {
-  background-color: white;
-}
-.messages-area {
-  padding: 2px;
-  height: 360px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.message {
-  word-wrap: break-word;
-  padding: 2px;
-}
-.time-span {
-  font-size: 10px;
-  color: $grey;
-}
-.textbox-area {
-  border-top: 1px solid $light-grey;
-  padding: 2px;
-  height: 40px;
+.title-date {
+   color: $blue;
 }
 </style>

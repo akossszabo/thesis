@@ -18,8 +18,8 @@
         <span v-show="selectable && selectedRows.length > 0">
           <button id="openbtn" class="table-button1" @click="$emit('onOpenClick', selectedRows)">Open</button>
         </span>
-        <span v-show="selectable && deletable && selectedRows.length > 0">
-          <button id="deletebtn" class="table-button1" @click="$emit('onDeleteClick')">Delete</button>
+        <span v-show="selectable && deletable && selectedRowIds.length > 0">
+          <button id="deletebtn" class="table-button1" @click="$emit('onDeleteClick', selectedRowIds)">Delete</button>
         </span>
         <span v-show="selectable && selectedRows.length > 0">
           <button id="clearbtn" class="table-button1" @click="clearSelectedRows">Clear</button>

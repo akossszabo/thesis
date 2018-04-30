@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thesis.gateway.dto.AccountDto;
+import com.thesis.gateway.dto.StatisticsDto;
 import com.thesis.gateway.service.GatewayService;
 
 @CrossOrigin(origins = "http://localhost:8080")
@@ -28,4 +29,15 @@ public class GatewayController {
 		return dto;
 	}
 
+	@RequestMapping(value = "/statistics", method = RequestMethod.GET)
+	public StatisticsDto statistics() {
+		StatisticsDto dto = new StatisticsDto();
+		try {
+			dto = gatewayService.getStatisticsInfo();
+		} catch (Throwable t) {
+			dto.setMessage("Something went wrong!");
+		}
+		return dto;
+	}
+	
 }

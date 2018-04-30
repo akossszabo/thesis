@@ -28,10 +28,6 @@ export default {
     name: String
   },
   beforeDestroy: function() {
-    console.log("kill interval");
-     console.log("interval beforeDestroy: " + this.interval);
-    clearInterval(this.interval);
-    console.log(window);
   },
   data() {
     return {
@@ -95,11 +91,12 @@ export default {
       console.log(frame);
       console.log("connect failed, polling started");
       const self = this;
-      this.interval = setInterval(
-        function() {self.getFormerMessages(self.projectId);},1000);
-      console.log("interval after set: " + this.interval);
-      //this.connectWs();
-      this.showChat = true;
+
+      //this.interval = setInterval(
+        //function() {self.getFormerMessages(self.projectId);},1000);
+      //console.log("interval after set: " + this.interval);
+      this.connectWs();
+      //this.showChat = true;
     },
     addMessage(frame) {
       let message = JSON.parse(frame.body);

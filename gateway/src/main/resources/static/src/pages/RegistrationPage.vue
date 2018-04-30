@@ -39,15 +39,6 @@ export default {
     return {
       showModal: false,
       showMessage: false,
-      options: [
-        { title: "Id" },
-        { title: "Name" },
-        { title: "Manufacturer" },
-        { title: "Price" },
-        { title: "Stock" },
-        { title: "Status" },
-        { title: "Adding date" }
-      ],
       headers: [
         { title: "First name", key: "firstName" },
         { title: "Last name", key: "lastName" },
@@ -67,6 +58,7 @@ export default {
     };
   },
     created() {
+      this.$store.commit('setSidebarTitle', 'Users');
         this.fetch();
     },
   methods: {

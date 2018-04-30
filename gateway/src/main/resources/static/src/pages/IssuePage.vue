@@ -8,7 +8,7 @@
         Assignee : {{issue.assignee}} 
       </div>
 
-       <div  class="box">
+       <div class="box">
         <div>type:  {{issue.type}}</div>
         <div>reporter: {{issue.reporter}}</div>
         <div>status: {{issue.status}}</div>
@@ -16,13 +16,17 @@
         <div>adding date: {{issue.creationDate}}</div>
         <div>priority: {{issue.priority}}</div>
       </div>
-        
-      <div id="users" class="box">
+        <div>
+        <span style="float: right; margin-left: 5px;">
+          <button class="small-btn blue-btn" >Edit</button>
+        </span>
+      </div>
+
+      </div>
+      <div id="summary" class="summary">
         <div class="title"> Summary </div>
         <div><span class="activity-name">{{issue.summary}}</span> </div>
         
-      </div>
-
       </div>
 
    <comment_section
@@ -30,12 +34,7 @@
     :issueId="issueId"
     :issue="issue"
     :name="account.firstName + ' ' + account.lastName">
-   </comment_section>   
-  <div>
-        <span style="float: right; margin-left: 5px;">
-          <button class="small-btn blue-btn" >Edit</button>
-        </span>
-      </div>
+   </comment_section>  
 <form_modal
       v-show="showModal" 
       :fields="formfields" 
@@ -127,7 +126,7 @@ export default {
 }
 .info-container {
   font-size: 12px;
-  width: 30%;
+  width: 40%;
   float: left;
   max-height: 98%;
   overflow: auto;
@@ -136,6 +135,14 @@ export default {
   margin-bottom: 10px;
   border: 1px solid $table-border-color;
   padding: 8px;
+}
+.summary {
+  margin-bottom: 10px;
+  border: 1px solid $table-border-color;
+  padding: 8px;
+  float: right;
+  width: 50%;
+  font-size: 12px;
 }
 .title {
   font-size: 20px;

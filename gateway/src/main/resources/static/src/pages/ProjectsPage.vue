@@ -18,11 +18,13 @@
       :deletable="true"
       :editable="true"
       :coloredStatus="true"
+      :clickableCells="true"
       @onRowClick="rowClick"
       @onAddClick="add"
       @onOpenClick="openClick"
-      @onDeleteClick="deleteProject"
-      @onEditClick="edit">
+      @onDeleteClick="deleteProjects"
+      @onEditClick="edit"
+      @onCellClick="cellClick">
       </apptable>
 	  
   </div>
@@ -43,7 +45,7 @@ export default {
       showModal: false,
       showMessage: false,
       headers: [
-        { title: "Name", key: "name" },
+        { title: "Name", key: "name", bclasses: "name-column" },
         { title: "Leader", key: "leader" },
         { title: "Type", key: "type" },
         {
@@ -64,12 +66,15 @@ export default {
       hiddenTable: true,
       formdata: {},
       selectedRow: null,
-      serverMessage: null
+      serverMessage: null,
+      selectedRowIds: null
     };
   },
 
   created() {
+    this.$store.commit('setSidebarTitle', 'Projects');
     this.fetch();
+
   },
 
   methods: {
@@ -96,18 +101,15 @@ export default {
         this.formdata = {};
       this.showModal = true;
     },
-    deleteProject(selectedRowIds){
-        var request = {
-                accountIds : selectedRowIds
+    deleteProjects(selectedRowIds){
+      console.log("ids: ", selectedRowIds);
+      var request = {
+                projectIds : selectedRowIds
             }
         console.log("delete projects request: ",request);
-        http.post(config.deleteAccountsUrl, request).then(({ data }) => {
+        http.post(config.deleteProjectsUrl, request).then(({ data }) => {
             this.fetch();
-            this.serverMessage = data.message;
-            this.showMessage = true;
-            setTimeout(() => {
-                this.showMessage = false;
-            }, 5000);
+            
       });
     },
     fetch() {
@@ -136,6 +138,7 @@ export default {
         });
         this.$router.push({ name: "toproject", params: { id: row.id } });
        }
+        
     },
     openClick(selectedRows) {
       for (var i = 0; i < selectedRows.length; i++) {

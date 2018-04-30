@@ -14,5 +14,9 @@ export default {
   createIssueUrl : "/project-service/issues",
   getFormerMessages : "/chat-service/messages",
   postMessage:"/chat-service/messages",
-  addCommentUrl : "/project-service/issues"
+  addCommentUrl : "/project-service/issues",
+  getAllIssuesUrl:"/project-service/allissues",
+  getStatInfo : "/statistics",
+  deleteProjectsUrl: '/project-service/deleteprojects',
+  deleteIssuesUrl: '/project-service/deleteissues'
 };
