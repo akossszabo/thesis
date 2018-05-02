@@ -13,12 +13,17 @@ spring:
         jdbc:
             lob:
               non_contextual_creation: true
- 
+              
 logging:
   level:
     org:
       hibernate:
         sql: debug
+        starttls:
+          enabled: true
+          required: true
         
 server:
   port: 8084
+
+  

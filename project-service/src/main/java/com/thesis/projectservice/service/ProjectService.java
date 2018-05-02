@@ -1,10 +1,10 @@
 package com.thesis.projectservice.service;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,6 @@ import com.thesis.projectservice.domain.Project;
 import com.thesis.projectservice.dto.AccountDto;
 import com.thesis.projectservice.dto.CommentDto;
 import com.thesis.projectservice.dto.IssueDto;
-import com.thesis.projectservice.dto.IssueStatus;
 import com.thesis.projectservice.dto.IssuesResponseDto;
 import com.thesis.projectservice.dto.ProjectDto;
 import com.thesis.projectservice.dto.StatisticsDto;
@@ -33,10 +32,10 @@ public class ProjectService {
 	private static Logger log = LoggerFactory.getLogger(ProjectService.class);
 	@Autowired
 	private GatewayClient gatewayClient;
-	
+
 	@Autowired
 	private AccountServiceClient accountClient;
-	
+
 	@Autowired
 	private ProjectRepository projectRepo;
 
@@ -56,15 +55,16 @@ public class ProjectService {
 				dto.setId(p.getId());
 				dto.setName(p.getName());
 				dto.setType(p.getType());
+				dto.setCreationDate(p.getCreationDate());
 				AccountDto account = accountClient.getAccountByEmail(p.getLeadId());
-				dto.setLeader(account.getFirstName() + " " +account.getLastName());
+				dto.setLeader(account.getFirstName() + " " + account.getLastName());
 				projectDtos.add(dto);
 			}
 		}
 		return projectDtos;
 	}
 
-	public void createProject(ProjectDto projectDto) {
+	public Long createProject(ProjectDto projectDto) {
 		Project project = null;
 		if (null == projectDto.getId() || null == projectRepo.findById(projectDto.getId())) {
 			project = new Project();
@@ -73,11 +73,11 @@ public class ProjectService {
 		}
 		project.setName(projectDto.getName());
 		project.setType(projectDto.getType());
-		project.setLeadId(gatewayClient.getAccount().getEmail());
+		project.setLeadId(projectDto.getLeader());
 		project.setCreationDate(new Date());
-		System.out.println("project leader: " + projectDto.getLeader());
-		projectRepo.saveAndFlush(project);
+		project.setSummary(projectDto.getSummary());
 		log.debug("Project succesfully created/updated, name: " + project.getName());
+		return projectRepo.saveAndFlush(project).getId();
 	}
 
 	public ProjectDto getProjectDetails(Long id) {
@@ -86,7 +86,7 @@ public class ProjectService {
 		if (null != p) {
 			dto.setId(p.getId());
 			AccountDto account = accountClient.getAccountByEmail(p.getLeadId());
-			dto.setLeader(account.getFirstName() + " " +account.getLastName());
+			dto.setLeader(account.getFirstName() + " " + account.getLastName());
 			dto.setName(p.getName());
 			dto.setType(p.getType());
 			dto.setSummary(p.getSummary());
@@ -104,9 +104,9 @@ public class ProjectService {
 	}
 
 	private void createIssueDto(List<IssueDto> items, Issue i, IssueDto idto) {
-		idto.setAssignee(i.getAssignee());
+		idto.setAssignee(i.getAssigneeName());
 		idto.setStatus(i.getStatus());
-		idto.setReporter(i.getReporter());
+		idto.setReporter(i.getReporterName());
 		idto.setPriority(i.getPriority());
 		idto.setType(i.getType());
 		idto.setName(i.getName());
@@ -114,7 +114,7 @@ public class ProjectService {
 		items.add(idto);
 	}
 
-	public void createIssue(IssueDto issueDto) {
+	public Long createIssue(IssueDto issueDto) {
 		Issue issue = null;
 
 		if (null == issueDto.getId() || null == issueRepo.findById(issueDto.getId())) {
@@ -129,25 +129,33 @@ public class ProjectService {
 		issue.setType(issueDto.getType());
 		issue.setPriority(issueDto.getPriority());
 		issue.setReporter(issueDto.getReporter());
-		issue.setStatus(IssueStatus.WAITING.toString());
+		AccountDto account = accountClient.getAccountByEmail(issueDto.getReporter());
+		if (null != account) {
+			issue.setReporterName(account.getFirstName() + " " + account.getLastName());
+		}
+		issue.setStatus(issueDto.getStatus());
 		issue.setSummary(issueDto.getSummary());
 		issue.setAssignee(issueDto.getAssignee());
+		AccountDto account2 = accountClient.getAccountByEmail(issueDto.getAssignee());
+		if(null != account2) {			
+			issue.setAssigneeName(account2.getFirstName() + " " + account2.getLastName());
+		}
 		issue.setCreationDate(new Date());
-
-		issueRepo.saveAndFlush(issue);
 		log.debug("Project succesfully created/updated, name: " + issue.getName());
+
+		return issueRepo.saveAndFlush(issue).getId();
 	}
 
 	public IssueDto geIssueDetails(Long id) {
 		Issue issue = issueRepo.getOne(id);
 		IssueDto dto = new IssueDto();
-		dto.setAssignee(issue.getAssignee());
+		dto.setAssignee(issue.getAssigneeName());
 		dto.setName(issue.getName());
 		dto.setPriority(issue.getPriority());
 		dto.setProjectId(issue.getProject().getId());
 		dto.setStatus(issue.getStatus());
 		dto.setType(issue.getType());
-		dto.setReporter(issue.getReporter());
+		dto.setReporter(issue.getReporterName());
 		dto.setId(issue.getId());
 		dto.setCreationDate(issue.getCreationDate());
 		dto.setSummary(issue.getSummary());
@@ -168,29 +176,29 @@ public class ProjectService {
 		return dtos;
 	}
 
-	public void addCommentToIssue(Long id, CommentDto request) {
+	public Long addCommentToIssue(Long id, CommentDto request) {
 		Issue issue = issueRepo.getOne(id);
 		Comment c = new Comment();
 		c.setIssue(issue);
 		c.setMessage(request.getMessage());
 		c.setPerson(request.getUser());
 		c.setSendDate(new Date());
-		commentRepo.saveAndFlush(c);
+		return commentRepo.saveAndFlush(c).getId();
 	}
 
 	public IssuesResponseDto getAllIssues() {
 		IssuesResponseDto response = new IssuesResponseDto();
 		List<Issue> issues = issueRepo.findByOrderByCreationDate();
 		List<IssueDto> responseItems = new ArrayList<>();
-		for(Issue issue : issues) {
+		for (Issue issue : issues) {
 			IssueDto dto = new IssueDto();
-			dto.setAssignee(issue.getAssignee());
+			dto.setAssignee(issue.getAssigneeName());
+			dto.setReporter(issue.getReporterName());
 			dto.setName(issue.getName());
 			dto.setPriority(issue.getPriority());
 			dto.setProjectId(issue.getProject().getId());
 			dto.setStatus(issue.getStatus());
 			dto.setType(issue.getType());
-			dto.setReporter(issue.getReporter());
 			dto.setId(issue.getId());
 			dto.setCreationDate(issue.getCreationDate());
 			dto.setComments(addCommentsToIssueDto(issue.getComments()));
@@ -210,8 +218,8 @@ public class ProjectService {
 
 	public void removeProjects(List<Long> projectIds) {
 		List<Project> projects = projectRepo.findAllById(projectIds);
-		for(Project p : projects) {
-			for(Issue i : p.getIssues()) {
+		for (Project p : projects) {
+			for (Issue i : p.getIssues()) {
 				commentRepo.deleteAll(i.getComments());
 			}
 			issueRepo.deleteAll(p.getIssues());
@@ -221,11 +229,29 @@ public class ProjectService {
 
 	public void removeIssues(List<Long> issueIds) {
 		List<Issue> issues = issueRepo.findAllById(issueIds);
-		for(Issue i : issues) {
+		for (Issue i : issues) {
 			commentRepo.deleteAll(i.getComments());
 		}
 		issueRepo.deleteAll(issues);
-		
+
 	}
-	
+
+	public List<AccountDto> getActiveUsers(Long projectId) {
+		Project p = projectRepo.getOne(projectId);
+		List<AccountDto> accounts = new ArrayList<>();
+		Set<String> users = new HashSet<>();
+		for (Issue i : p.getIssues()) {
+			users.add(i.getAssigneeName());
+		}
+		Long id = 0L;
+		for (String u : users) {
+			AccountDto dto = new AccountDto();
+			dto.setId(id);
+			dto.setName(u);
+			++id;
+			accounts.add(dto);
+		}
+		return accounts;
+	}
+
 }

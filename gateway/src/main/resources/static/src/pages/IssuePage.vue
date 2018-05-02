@@ -10,15 +10,15 @@
 
        <div class="box">
         <div>type:  {{issue.type}}</div>
-        <div>reporter: {{issue.reporter}}</div>
+        <div>reporter: {{issue.reporterName}}</div>
         <div>status: {{issue.status}}</div>
-        <div>assignee: {{issue.assignee}}</div>
+        <div>assignee: {{issue.assigneeName}}</div>
         <div>adding date: {{issue.creationDate}}</div>
         <div>priority: {{issue.priority}}</div>
       </div>
-        <div>
+        <div class="editbutton">
         <span style="float: right; margin-left: 5px;">
-          <button class="small-btn blue-btn" >Edit</button>
+          <button class="small-btn blue-btn" @click="edit" >Edit</button>
         </span>
       </div>
 
@@ -42,6 +42,15 @@
       @onSubmitClick="submit" 
       @onCancelClick="showModal=false">
     </form_modal>
+    <form_modal2
+      v-show="showModal2" 
+      :fields="formfields2" 
+      :formdata="issuedata" 
+      @onSubmitClick="submitIssue" 
+      @onCancelClick="showModal2=false">
+    </form_modal2>
+  </div>
+  
   </div>
 </template>
 
@@ -50,9 +59,10 @@ import { mapState } from "vuex";
 import http from "../http.js";
 import config from "../config.js";
 import form_modal from "../components/FormModal.vue";
+import form_modal2 from "../components/FormModal.vue";
 import comment_section from "../components/CommentSection.vue";
 export default {
-  components: { form_modal, mapState, comment_section },
+  components: { form_modal,form_modal2, mapState, comment_section },
   computed: {
     ...mapState(["account"])
   },
@@ -62,7 +72,47 @@ export default {
       username: "",
       comments: [],
       issue: null,
-      showModal: false
+      showModal: false,
+      showModal2: false,
+      projectId: null,
+      formdata: {},
+       formfields: [
+        { title: "Comment", key: "comment", type: "text", validate: "required, min(5)" }
+      ],
+       formfields2: [
+        {
+          title: "Name",
+          key: "name",
+          type: "text",
+          validate: "required, min(3)"
+        },
+        {
+          title: "Summary",
+          key: "summary",
+          type: "text",
+          validate: "required, max(100)"
+        },
+        {
+          title: "Priority",
+          key: "priority",
+          type: "select",
+          selects: ["Top", "Low"]
+        },
+        {
+          title: "Type",
+          key: "type",
+          type: "select",
+          selects: ["Bug", "New Feature"]
+        },
+        {
+          title: "Status",
+          key: "status",
+          type: "select",
+          selects: ["Todo", "In Progress", "In Review", "Done", "Cancelled"]
+        }
+      ],
+      issuedata:{},
+      selectedRow: null
     };
   },
   created() {
@@ -92,13 +142,24 @@ export default {
           console.log("resp: ", data);
           this.serverMessage = data.message;
           this.showMessage = true;
-          this.buildPage(this.projectId);
-
-          setTimeout(() => {
-            this.showMessage = false;
-          }, 5000);
+          this.buildPage(this.issueId);
+      
         });
       this.showModal = false;
+    },
+    submitIssue() {
+      var request = {
+        issue: this.issuedata
+        
+      };
+      request.issue.id= this.issueId;
+      request.issue.reporter = this.account.email;
+      http.post(config.createIssueUrl, request).then(({ data }) => {
+        this.hide = false;
+        console.log("resp: ", data);
+        this.buildPage(this.issueId);
+      });
+      this.showModal2 = false;
     },
     buildPage(id) {
       this.issueId = id;
@@ -106,7 +167,12 @@ export default {
         this.comments = data.comments;
         console.log("issue comments: ", this.comments);
         this.issue = data;
+        this.projectId = issue.projectId;
       });
+    },
+    edit(){
+      this.issuedata = this.issue;
+      this.showModal2 = true;
     }
   }
 };
@@ -135,6 +201,10 @@ export default {
   margin-bottom: 10px;
   border: 1px solid $table-border-color;
   padding: 8px;
+}
+.editbutton{
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .summary {
   margin-bottom: 10px;

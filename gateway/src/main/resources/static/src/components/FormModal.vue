@@ -3,7 +3,11 @@
     <div class="modal-content">
       <form v-for="(field, index) in fields" :key="index">
         <div class="form-group">
-          <input v-show="field.type!='select'" type="field.type" required="required" v-model="formdata[field.key]" />
+          <input v-show="field.type==='text'" type="field.type" required="required" v-model="formdata[field.key]" />
+          <input v-show="field.type==='password'" type="password" required="required" v-model="formdata[field.key]" />
+          <select v-show="field.type==='objSelect'" v-model="formdata[field.key]">
+            <option v-for="(s) in assignees" v-bind:value="s.key" :key="s.key">{{s.value}}</option>
+          </select>
           <select v-show="field.type==='select'" v-model="formdata[field.key]">
             <option v-for="(s,i) in field.selects" :key="i">{{s}}</option>
           </select>
@@ -29,7 +33,8 @@
 export default {
   props: {
     fields: Array,
-    formdata: Object
+    formdata: Object,
+    assignees: Array
   },
   data() {
     return {

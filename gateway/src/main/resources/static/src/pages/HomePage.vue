@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="row">
+    <div class="row" v-show="userNumber!=null">
       <div class="column">
         <infobox title="Projects" :info="projectNumber"></infobox>
       </div>

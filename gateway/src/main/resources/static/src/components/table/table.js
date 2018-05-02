@@ -12,7 +12,8 @@ export default {
     editable: Boolean,
     coloredStatus: Boolean,
     clickableCells: Boolean,
-    heightDiff: Number
+    heightDiff: Number,
+    showAddButton: Boolean
   },
 
   data() {

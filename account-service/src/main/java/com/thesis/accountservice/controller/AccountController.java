@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thesis.accountservice.dto.AccountDto;
 import com.thesis.accountservice.dto.AccountsResponseDto;
+import com.thesis.accountservice.dto.AccountsToSelectDto;
 import com.thesis.accountservice.dto.BaseResponse;
 import com.thesis.accountservice.dto.DeleteAccountsRequestDto;
+import com.thesis.accountservice.dto.ModifyPasswordRequest;
 import com.thesis.accountservice.dto.RegistrationRequestDto;
 import com.thesis.accountservice.service.AccountService;
 
@@ -38,7 +40,7 @@ public class AccountController {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public BaseResponse delete(@RequestBody DeleteAccountsRequestDto request) {
 		BaseResponse response = new BaseResponse();
@@ -52,7 +54,7 @@ public class AccountController {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/accounts", method = RequestMethod.GET)
 	public AccountsResponseDto getAllAccounts() {
 		AccountsResponseDto response = new AccountsResponseDto();
@@ -66,6 +68,19 @@ public class AccountController {
 		return response;
 	}
 	
+	@RequestMapping(value = "/accountstoselect", method = RequestMethod.GET)
+	public AccountsToSelectDto getAllAccountsToSelect() {
+		AccountsToSelectDto response = new AccountsToSelectDto();
+		try {
+			response.setItems(accountService.getAllAccountsToSelect());
+			log.debug("get all accounts");
+		} catch (Throwable t) {
+			log.error("error while listing accounts", t);
+			response.setMessage("Something went wrong!");
+		}
+		return response;
+	}
+
 	@RequestMapping(value = "/principalinfo", method = RequestMethod.GET)
 	public AccountDto getAccountByEmail(@RequestParam("email") String email) {
 		AccountDto response = new AccountDto();
@@ -78,6 +93,7 @@ public class AccountController {
 		}
 		return response;
 	}
+
 	@RequestMapping(value = "/usernumber", method = RequestMethod.GET)
 	public Long getUserNumber() {
 		try {
@@ -87,5 +103,18 @@ public class AccountController {
 			log.error("error while get account number", t);
 		}
 		return 0L;
+	}
+	@RequestMapping(value = "/modifypassword", method = RequestMethod.POST)
+	public BaseResponse modifyPassword(@RequestBody ModifyPasswordRequest request) {
+		BaseResponse response = new BaseResponse();
+		try {
+			accountService.modifyPassword(request.getPwRequest());
+			log.debug("password successfully modified");
+			response.setMessage("password successfully modified");
+		} catch (Throwable t) {
+			log.error("error while set new password", t);
+			response.setMessage("something went wrong");
+		}
+		return response;
 	}
 }

@@ -19,6 +19,7 @@
       :editable="true"
       :coloredStatus="true"
       :clickableCells="true"
+      :showAddButton="true"
       @onRowClick="rowClick"
       @onAddClick="add"
       @onOpenClick="openClick"
@@ -39,7 +40,9 @@ import form_modal from "../components/FormModal.vue";
 
 export default {
   components: { apptable,form_modal,mapState },
-
+computed: {
+    ...mapState(["account"])
+  },
   data() {
     return {
       showModal: false,
@@ -61,7 +64,6 @@ export default {
         { title: "Summary", key: "summary", type: "text", validate: "required, min(10)" }
       ],
       datas: [],
-      account: {},
       defaultSortKey: "name",
       hiddenTable: true,
       formdata: {},

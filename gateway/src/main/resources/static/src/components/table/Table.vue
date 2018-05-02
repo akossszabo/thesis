@@ -28,7 +28,7 @@
           <button id="allbtn" class="table-button1" @click="selectAllRows">All</button>
           </span>
         <span>
-          <button id="addbtn" class="table-button1" @click="$emit('onAddClick')">Add</button>
+          <button  id="addbtn" class="table-button1" @click="$emit('onAddClick')">Add</button>
         </span>
       </div>
     </div>

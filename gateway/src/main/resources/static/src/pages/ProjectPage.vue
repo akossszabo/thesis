@@ -28,12 +28,8 @@
       </div>
 
       <div id="act" class="box">
-        <div class="title">Latest activity </div>
-        <div class="activity"><span class="activity-name">Harry Potter</span> started progress on <span class="activity-id">UNEDM-135</span></div>
-        <div class="activity"><span class="activity-name">Hermione Granger</span> started progress on <span class="activity-id">UNEDM-134</span></div>
-        <div class="activity"><span class="activity-name">Ronald Weasley</span> changed the Assignee to 'Kaszányi Dávid' on <span class="activity-id">UNEDM-136</span></div>
-        <div class="activity"><span class="activity-name">Harry Potter</span> started progress on <span class="activity-id">UNEDM-135</span></div>
-        <div class="activity"><span class="activity-name">Hermione Granger</span> started progress on <span class="activity-id">UNEDM-134</span></div>
+        <div class="title">Employees on {{project.name}}</div>
+        <div class="activity" v-for="(u) in activeUsers" :key="u.id"><span class="activity-name">{{u.name}}</span></div>
       </div>
 </div>
     <apptable class="apptable-smaller" 
@@ -47,10 +43,11 @@
       :deletable="true" 
       :editable="true" 
       :coloredStatus="true" 
-      :clickableCells="true" 
+      :clickableCells="true"
+      :showAddButton="true"
       @onRowClick="rowClick" 
       @onOpenClick="openClick" 
-      @onEditClick="editClick" 
+      @onEditClick="editClick"
       @onDeleteClick="deleteClick"
       @onAddClick="addClick"
       @onCellClick="cellClick">
@@ -59,7 +56,8 @@
     <form_modal
       v-show="showModal" 
       :fields="formfields" 
-      :formdata="formdata" 
+      :formdata="formdata"
+      :assignees="users"
       @onSubmitClick="submit" 
       @onCancelClick="showModal=false">
     </form_modal>
@@ -67,7 +65,6 @@
   <chat_window
   :projectId="projectId"
   :name="account.firstName + ' ' + account.lastName" 
-
   >
   </chat_window>
   
@@ -94,13 +91,14 @@ export default {
       summary: null,
       headers: [
         { title: "Name", key: "name", bclasses: "name-column" },
-        { title: "Summary", key: "summary", width: "30%", bclasses: "bold" },
+        { title: "Assignee", key: "assignee"},
         { title: "Priority", key: "priority" },
+        { title: "Reporter", key: "reporter"},
         { title: "Type", key: "type" },
         { title: "Status", key: "status" },
         {
           title: "Adding Date",
-          key: "addDate",
+          key: "creationDate",
           hclasses: "hide-date",
           bclasses: "hide-date"
         }
@@ -148,7 +146,7 @@ export default {
         {
           title: "Assignee",
           key: "assignee",
-          type: "select",
+          type: "objSelect",
           selects: this.users
         },
         {
@@ -164,7 +162,8 @@ export default {
       showModal: false,
       selectedRow: null,
       username: "",
-      openedIssuesNum: 0
+      openedIssuesNum: 0,
+      activeUsers: []
     };
   },
   created() {
@@ -211,8 +210,15 @@ export default {
         });
     },
     fetchUsers(){
-       http.get(config.getAccountsUrl).then(({ data }) => {
+       http.get(config.getAccountsToSelectUrl).then(({ data }) => {
         this.users = data.items;
+        console.log("users arrived: ",this.users);
+      });
+    },
+    fetchActiveUsers(){
+      http.get(config.getActiveUsersUrl+ "/" + this.projectId).then(({ data }) => {
+        this.activeUsers = data.items;
+        console.log("users arrived: ",this.users);
       });
     },
     calculateOpenedIssues(data) {
@@ -231,6 +237,7 @@ export default {
       this.selectedRow = null;
       this.projectId = id;
       this.getProjectDetails();
+      this.fetchActiveUsers();
       this.username = this.account.firstName + " " + this.account.lastName;
     },
     getProjectDetails(){

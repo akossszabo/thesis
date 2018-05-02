@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thesis.projectservice.dto.AccountsResponseDto;
 import com.thesis.projectservice.dto.BaseResponse;
 import com.thesis.projectservice.dto.CommentDto;
 import com.thesis.projectservice.dto.CreateIssueRequestDto;
@@ -172,4 +173,19 @@ public class ProjectController {
 		}
 		return response;
 	}
+	
+	@GetMapping("/activeusers/{projectId}")
+	public AccountsResponseDto getActiveUsers(@PathVariable Long projectId) {
+		AccountsResponseDto response = new AccountsResponseDto();
+		try {
+			response.setItems(projectService.getActiveUsers(projectId));
+			log.debug("getActiveUsers: " + projectId);
+			response.setMessage("projects deleted.");
+		} catch (Throwable t) {
+			log.error("error while remove issues", t);
+			response.setMessage("Something went wrong!");
+		}
+		return response;
+	}
+	
 }

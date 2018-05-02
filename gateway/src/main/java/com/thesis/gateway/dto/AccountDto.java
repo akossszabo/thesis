@@ -17,6 +17,7 @@ public class AccountDto extends BaseResponse implements UserDetails {
 	private String lastName;
 	private String password;
 	private List<SimpleGrantedAuthority> roles;
+	private String role;
 
 	public String getEmail() {
 		return email;
@@ -91,5 +92,13 @@ public class AccountDto extends BaseResponse implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 }

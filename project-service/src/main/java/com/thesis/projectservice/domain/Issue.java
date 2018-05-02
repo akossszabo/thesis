@@ -23,7 +23,9 @@ public class Issue implements Serializable{
 	private Project project;
 	private String summary;
 	private String reporter;
+	private String reporterName;
 	private String assignee;
+	private String assigneeName;
 	private String status;
 	private String name;
 	private String priority;
@@ -98,6 +100,18 @@ public class Issue implements Serializable{
 	}
 	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
+	}
+	public String getReporterName() {
+		return reporterName;
+	}
+	public void setReporterName(String reporterName) {
+		this.reporterName = reporterName;
+	}
+	public String getAssigneeName() {
+		return assigneeName;
+	}
+	public void setAssigneeName(String assigneeName) {
+		this.assigneeName = assigneeName;
 	}
 	
 	

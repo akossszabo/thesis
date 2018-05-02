@@ -1,4 +1,4 @@
-package com.thesis.accountservice.dto;
+package com.thesis.projectservice.dto;
 
 import java.util.List;
 

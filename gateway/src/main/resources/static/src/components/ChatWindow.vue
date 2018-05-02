@@ -88,13 +88,8 @@ export default {
       this.wsConnected = true;
     },
     onError(frame) {
-      console.log(frame);
-      console.log("connect failed, polling started");
-      const self = this;
-
-      //this.interval = setInterval(
-        //function() {self.getFormerMessages(self.projectId);},1000);
-      //console.log("interval after set: " + this.interval);
+      console.log("error, connect to port 8088");
+      this.socket = new SockJS("http://localhost:8088/chat-service");
       this.connectWs();
       //this.showChat = true;
     },

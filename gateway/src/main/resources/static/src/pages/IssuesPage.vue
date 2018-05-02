@@ -12,11 +12,11 @@
       :editable="true"
       :coloredStatus="true"
       :clickableCells="true"
+      :showAddButton="false"
       @onRowClick="rowClick"
       @onOpenClick="openClick"
       @onEditClick="editClick"
       @onDeleteClick="deleteClick"
-      @onAddClick="addClick"
       @onCellClick="cellClick">
       </apptable>
 
@@ -24,6 +24,7 @@
       v-show="show_modal"
       :fields="formfields"
       :formdata="formdata"
+      :assignees="users"
       @onSubmitClick="submitClick"
       @onCancelClick="show_modal=false">
       </form_modal>
@@ -33,27 +34,33 @@
 <script>
 import http from "../http.js";
 import config from "../config.js";
+import { mapState } from "vuex";
 import apptable from "../components/table/Table.vue";
 import form_modal from "../components/FormModal.vue";
 export default {
   components: { apptable, form_modal },
+  computed: {
+    ...mapState(["account"])
+  },
   data() {
     return {
        headers: [
         { title: "Id", key: "id"}, 
         { title: "Name", key: "name", bclasses: "name-column" },
-        { title: "Summary", key: "summary", width: "30%", bclasses: "bold" },
+        { title: "Assignee", key: "assignee"},
         { title: "Priority", key: "priority" },
+        { title: "Reporter", key: "reporter"},
         { title: "Type", key: "type" },
         { title: "Status", key: "status" },
         {
           title: "Adding Date",
-          key: "addDate",
+          key: "creationDate",
           hclasses: "hide-date",
           bclasses: "hide-date"
         }
       ],
       datas: [],
+      users:[],
       filters: [
         { title: "Priority", key: "priority", selects: ["Low", "Medium", "High"] },
         { title: "Type", key: "type", selects: ["Bug", "New Feature"] },
@@ -87,7 +94,7 @@ export default {
         {
           title: "Assignee",
           key: "assignee",
-          type: "select",
+          type: "objSelect",
           selects: this.users
         },
         {
@@ -109,10 +116,31 @@ export default {
     this.fetch();
   },
   methods: {
+    submit() {
+      var request = {
+        issue: this.formdata
+      };
+      request.issue.projectId = this.projectId;
+      request.issue.reporter = this.account.email;
+      http.post(config.createIssueUrl, request).then(({ data }) => {
+        this.hide = false;
+        console.log("resp: ", data);
+        this.serverMessage = data.message;
+        this.showMessage = true;
+        this.fetch();
+      });
+      this.showModal = false;
+    },
     fetch() {
       http.get(config.getAllIssuesUrl).then(({ data }) => {
         this.datas = data.items;
         this.hiddenTable = false;
+      });
+    },
+    fetchUsers(){
+       http.get(config.getAccountsToSelectUrl).then(({ data }) => {
+        this.users = data.items;
+        console.log("users arrived: ",this.users);
       });
     },
     rowClick(row, selectedRows) {

@@ -1,4 +1,4 @@
-package com.thesis.chatservice.web;
+package com.thesis.chatservice.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.thesis.chatservice.domain.ChatMessage;
 import com.thesis.chatservice.dto.MessageDto;
-import com.thesis.chatservice.service.ChatMessageRepo;
 
 @Service
 public class MessageService {
@@ -41,6 +40,15 @@ public class MessageService {
 		m.setMessage(message.getText());
 		repo.saveAndFlush(m);
 		return new ArrayList<>();
+	}
+
+	public void saveMessage(MessageDto message, String projectId) {
+		ChatMessage msg = new ChatMessage();
+		msg.setMessage(message.getText());
+		msg.setProjectId(projectId);
+		msg.setUsername(message.getUsername());
+		msg.setSendDate(message.getTime());
+		repo.saveAndFlush(msg);
 	}
 
 }

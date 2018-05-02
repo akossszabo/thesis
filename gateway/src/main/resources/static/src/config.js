@@ -3,6 +3,7 @@ export default {
   apiBaseUrl: '/',
   registrationUrl: '/account-service/registration',
   getAccountsUrl: '/account-service/accounts',
+  getAccountsToSelectUrl: "/account-service/accountstoselect",
   deleteAccountsUrl: '/account-service/delete',
   getAllProjectsUrl: '/project-service/projects',
   createProjectUrl: '/project-service/projects',
@@ -18,5 +19,7 @@ export default {
   getAllIssuesUrl:"/project-service/allissues",
   getStatInfo : "/statistics",
   deleteProjectsUrl: '/project-service/deleteprojects',
-  deleteIssuesUrl: '/project-service/deleteissues'
+  deleteIssuesUrl: '/project-service/deleteissues',
+  getActiveUsersUrl : '/project-service/activeusers',
+  modifyPassword: '/account-service/modifypassword'
 };

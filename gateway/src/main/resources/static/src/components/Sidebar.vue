@@ -7,7 +7,8 @@
         </div>
         <div :class="{'hidden': hiddableMenu && !openedMenus.includes(item.path), 'selected': sidebarTitle===child.title}" v-for="child in item.children" :key="child.title">
           <router-link :to="item.path+child.path">
-            <div class="sidebar-link">{{child.title}}</div>
+
+            <div v-show="checkRole(child.title)" class="sidebar-link">{{child.title}}</div>
           </router-link>
         </div>
       </div>
@@ -57,7 +58,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["sidebarTitle", "isSidebarVisible", "lastOpenedProjects", "lastOpenedIssues"])
+    ...mapState(["sidebarTitle", "isSidebarVisible", "lastOpenedProjects", "lastOpenedIssues","account"])
   },
   methods: {
     menuClick(input) {
@@ -75,6 +76,15 @@ export default {
     toIssue(id) {
       this.$router.push({ name: "toissue", params: { id: id } });
     },
+    checkRole(title){
+      if(title==='Users'){
+        if(this.account.role === "admin"){
+          return true;
+        }
+        return false;
+      }
+      return true;
+    }
   }
 };
 </script>

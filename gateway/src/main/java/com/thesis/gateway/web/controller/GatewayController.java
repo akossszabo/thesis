@@ -1,6 +1,7 @@
 package com.thesis.gateway.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,13 +20,14 @@ public class GatewayController {
 	private GatewayService gatewayService;
 
 	@RequestMapping(value = "/principal", method = RequestMethod.GET)
-	public AccountDto getPrincipal(Authentication auth) {
+	public AccountDto getPrincipal(Authentication auth, ServerHttpResponse response) {
 		AccountDto dto = new AccountDto();
 		try {
 			dto = gatewayService.getAccountInfo(auth);
 		} catch (Throwable t) {
 			dto.setMessage("User not found!");
 		}
+		response.getHeaders().add("Content-type", "application/json");
 		return dto;
 	}
 
@@ -39,5 +41,5 @@ public class GatewayController {
 		}
 		return dto;
 	}
-	
+
 }

@@ -42,12 +42,14 @@ export default {
       headers: [
         { title: "First name", key: "firstName" },
         { title: "Last name", key: "lastName" },
-        { title: "Email address", key: "email" }
+        { title: "Email address", key: "email" },
+        { title: "Role", key: "role"}
       ],
        formfields: [
         { title: "First name", key: "firstName", type: "text", validate: "required, min(2)" },
         { title: "Last name", key: "lastName", type: "text", validate: "required, min(2)" },
-        { title: "Email address", key: "email", type: "text", validate: "required, email" }
+        { title: "Email address", key: "email", type: "text", validate: "required, email" },
+        { title: "Role", key: "role", type: "select", selects: ["user", "admin"], validate: "required" }
       ],
       datas: [],
       defaultSortKey: "firstName",
@@ -69,13 +71,7 @@ export default {
         http.post(config.registrationUrl, request).then(({ data }) => {
             this.hide = false;
             console.log("resp: ",data);
-            this.serverMessage = data.message;
-            this.showMessage = true;
             this.fetch();
-
-            setTimeout(() => {
-                this.showMessage = false;
-            }, 5000);
       });
 
       this.showModal = false;
