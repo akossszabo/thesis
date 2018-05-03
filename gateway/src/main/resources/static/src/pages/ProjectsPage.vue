@@ -53,7 +53,7 @@ computed: {
         { title: "Type", key: "type" },
         {
           title: "Adding Date",
-          key: "addDate",
+          key: "creationDate",
           hclasses: "hide-date",
           bclasses: "hide-date"
         }
