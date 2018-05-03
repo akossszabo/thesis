@@ -5,21 +5,11 @@
         <div style="padding-bottom: 5px;">
           <span class="title">{{project.name}}</span>
         </div>
-        Lead : {{project.leader}} 
+       <div>Lead:<span class="activity-name"> {{project.leader}} </span> </div>
+       <div>Type:<span class="activity-name"> {{project.type}}</span> </div>
+        <div>Adding date:<span class="activity-name"> {{project.creationDate}}</span> </div>
       </div>
 
-      <div id="datas1" class="box">
-        <div>type: {{project.type}}</div>
-        <div>client: {{project.client}}</div>
-        <div>status: {{project.state}}</div>
-        <div>adding date: {{project.creationDate}}</div>
-      </div>
-
-      <div id="datas2" class="box">
-      <!--  <div>issues: {{datas.length}}</div>-->
-        <div>opened issues: {{openedIssuesNum}}</div>
-        
-      </div>
 
       <div id="users" class="box">
         <div class="title"> Summary </div>
@@ -91,9 +81,9 @@ export default {
       summary: null,
       headers: [
         { title: "Name", key: "name", bclasses: "name-column" },
-        { title: "Assignee", key: "assignee"},
+        { title: "Assignee", key: "assignee" },
         { title: "Priority", key: "priority" },
-        { title: "Reporter", key: "reporter"},
+        { title: "Reporter", key: "reporter" },
         { title: "Type", key: "type" },
         { title: "Status", key: "status" },
         {
@@ -172,7 +162,7 @@ export default {
     let path = window.location.hash.substring(1);
     let patharray = path.split("/");
     this.fetchUsers();
-    this.buildPage(patharray[patharray.length-1]);
+    this.buildPage(patharray[patharray.length - 1]);
   },
   beforeRouteUpdate(to, from, next) {
     console.log("before route update");
@@ -180,7 +170,7 @@ export default {
     this.buildPage(to.params.id);
     next();
   },
-   beforeRouteLeave(to, from, next) {
+  beforeRouteLeave(to, from, next) {
     console.log("elhagytuk ezt a route-ot");
     next();
   },
@@ -200,29 +190,31 @@ export default {
       });
       this.showModal = false;
     },
-    fetch(){
+    fetch() {
       http
         .get(config.getProjectDetails + "/" + this.projectId)
         .then(({ data }) => {
-          console.log("datas arrived")
+          console.log("datas arrived");
           this.datas = data.items;
           this.hiddenTable = false;
         });
     },
-    fetchUsers(){
-       http.get(config.getAccountsToSelectUrl).then(({ data }) => {
+    fetchUsers() {
+      http.get(config.getAccountsToSelectUrl).then(({ data }) => {
         this.users = data.items;
-        console.log("users arrived: ",this.users);
+        console.log("users arrived: ", this.users);
       });
     },
-    fetchActiveUsers(){
-      http.get(config.getActiveUsersUrl+ "/" + this.projectId).then(({ data }) => {
-        this.activeUsers = data.items;
-        console.log("users arrived: ",this.users);
-      });
+    fetchActiveUsers() {
+      http
+        .get(config.getActiveUsersUrl + "/" + this.projectId)
+        .then(({ data }) => {
+          this.activeUsers = data.items;
+          console.log("users arrived: ", this.users);
+        });
     },
     calculateOpenedIssues(data) {
-      if(data) {
+      if (data) {
         data.map(function(value, key) {
           if (value.status !== "Done") {
             ++this.openedIssuesNum;
@@ -240,12 +232,12 @@ export default {
       this.fetchActiveUsers();
       this.username = this.account.firstName + " " + this.account.lastName;
     },
-    getProjectDetails(){
-      console.log("getProjectDetails")
+    getProjectDetails() {
+      console.log("getProjectDetails");
       http
         .get(config.getProjectDetails + "/" + this.projectId)
         .then(({ data }) => {
-          console.log("datas arrived")
+          console.log("datas arrived");
           this.datas = data.items;
           this.project = data;
           this.hiddenTable = false;
@@ -273,14 +265,13 @@ export default {
       }
     },
     deleteClick(selectedRowIds) {
-       console.log("delete issues request: ",selectedRowIds);
+      console.log("delete issues request: ", selectedRowIds);
       var request = {
-                issueIds : selectedRowIds
-            }
-       
-        http.post(config.deleteIssuesUrl, request).then(({ data }) => {
-            this.fetch();
-            
+        issueIds: selectedRowIds
+      };
+
+      http.post(config.deleteIssuesUrl, request).then(({ data }) => {
+        this.fetch();
       });
     },
     addClick() {

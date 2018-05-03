@@ -74,6 +74,8 @@ public class ProjectService {
 		project.setName(projectDto.getName());
 		project.setType(projectDto.getType());
 		project.setLeadId(projectDto.getLeader());
+		AccountDto account = accountClient.getAccountByEmail(projectDto.getLeader());
+		project.setLeaderName(account.getFirstName() + " " + account.getLastName());
 		project.setCreationDate(new Date());
 		project.setSummary(projectDto.getSummary());
 		log.debug("Project succesfully created/updated, name: " + project.getName());
@@ -85,11 +87,11 @@ public class ProjectService {
 		ProjectDto dto = new ProjectDto();
 		if (null != p) {
 			dto.setId(p.getId());
-			AccountDto account = accountClient.getAccountByEmail(p.getLeadId());
-			dto.setLeader(account.getFirstName() + " " + account.getLastName());
 			dto.setName(p.getName());
 			dto.setType(p.getType());
 			dto.setSummary(p.getSummary());
+			dto.setCreationDate(p.getCreationDate());
+			dto.setLeader(p.getLeaderName());
 		}
 		List<Issue> issues = p.getIssues();
 		List<IssueDto> items = new ArrayList<>();
@@ -111,6 +113,7 @@ public class ProjectService {
 		idto.setType(i.getType());
 		idto.setName(i.getName());
 		idto.setId(i.getId());
+		idto.setCreationDate(i.getCreationDate());
 		items.add(idto);
 	}
 
@@ -136,11 +139,11 @@ public class ProjectService {
 		issue.setStatus(issueDto.getStatus());
 		issue.setSummary(issueDto.getSummary());
 		issue.setAssignee(issueDto.getAssignee());
+		issue.setCreationDate(new Date());
 		AccountDto account2 = accountClient.getAccountByEmail(issueDto.getAssignee());
-		if(null != account2) {			
+		if (null != account2) {
 			issue.setAssigneeName(account2.getFirstName() + " " + account2.getLastName());
 		}
-		issue.setCreationDate(new Date());
 		log.debug("Project succesfully created/updated, name: " + issue.getName());
 
 		return issueRepo.saveAndFlush(issue).getId();

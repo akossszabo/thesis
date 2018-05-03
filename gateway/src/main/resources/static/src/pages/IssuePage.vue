@@ -5,19 +5,18 @@
         <div style="padding-bottom: 5px;">
           <span class="title">Issue: {{issue.name}}</span>
         </div>
-        Assignee : {{issue.assignee}} 
+        Assignee:<span class="activity-name"> {{issue.assignee}} </span>
       </div>
 
        <div class="box">
-        <div>type:  {{issue.type}}</div>
-        <div>reporter: {{issue.reporterName}}</div>
-        <div>status: {{issue.status}}</div>
-        <div>assignee: {{issue.assigneeName}}</div>
-        <div>adding date: {{issue.creationDate}}</div>
-        <div>priority: {{issue.priority}}</div>
+        <div>Type:<span class="activity-name"> {{issue.type}}</span></div>
+        <div>Reporter:<span class="activity-name"> {{issue.reporter}}</span></div>
+        <div>Status:<span class="activity-name"> {{issue.status}}</span></div>
+        <div>Adding date:<span class="activity-name"> {{issue.creationDate}}</span></div>
+        <div>Priority:<span class="activity-name"> {{issue.priority}}</span></div>
       </div>
         <div class="editbutton">
-        <span style="float: right; margin-left: 5px;">
+        <span style="float: right; margin-left: 5px; margin-bottom: 10px;">
           <button class="small-btn blue-btn" @click="edit" >Edit</button>
         </span>
       </div>
