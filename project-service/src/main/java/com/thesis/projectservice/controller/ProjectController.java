@@ -1,6 +1,8 @@
 package com.thesis.projectservice.controller;
 
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -39,7 +41,7 @@ public class ProjectController {
 	private ProjectService projectService;
 
 	@GetMapping("/projects")
-	public ProjectsResponseDto getAllProjects() {
+	public ProjectsResponseDto getAllProjects(HttpServletResponse httpResp) throws IOException {
 		ProjectsResponseDto response = new ProjectsResponseDto();
 		try {
 			response.setItems(projectService.getAllProjects());
@@ -47,12 +49,13 @@ public class ProjectController {
 		} catch (Throwable t) {
 			log.error("error while listing projects", t);
 			response.setMessage("Something went wrong!");
+			httpResp.sendError(500);
 		}
 		return response;
 	}
 
 	@PostMapping("/projects")
-	public BaseResponse createProject(@RequestBody CreateProjectRequestDto request) {
+	public BaseResponse createProject(@RequestBody CreateProjectRequestDto request,HttpServletResponse httpResp) throws IOException {
 
 		BaseResponse response = new BaseResponse();
 		try {
@@ -61,12 +64,13 @@ public class ProjectController {
 		} catch (Throwable t) {
 			log.error("error while creating project", t);
 			response.setMessage("Something went wrong!");
+			httpResp.sendError(500);
 		}
 		return response;
 	}
 
 	@GetMapping("/projects/{id}")
-	public ProjectDto getProjectDetails(@PathVariable Long id) {
+	public ProjectDto getProjectDetails(@PathVariable Long id,HttpServletResponse httpResp) {
 		ProjectDto response = new ProjectDto();
 		try {
 			log.debug("get project by id,", id);
@@ -79,7 +83,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/issues")
-	public BaseResponse createIssue(@RequestBody CreateIssueRequestDto request,HttpServletResponse httpRes) {
+	public BaseResponse createIssue(@RequestBody CreateIssueRequestDto request,HttpServletResponse httpRes) throws IOException {
 		BaseResponse response = new BaseResponse();
 		try {
 			projectService.createIssue(request.getIssue());
@@ -87,19 +91,21 @@ public class ProjectController {
 		} catch (Throwable t) {
 			log.error("error while creating issue", t);
 			response.setMessage("Something went wrong!");
+			httpRes.sendError(500);
 		}
 		httpRes.addHeader("Access-Control-Allow-Origin", "*");
 		return response;
 	}
 	
 	@GetMapping("/allissues")
-	public IssuesResponseDto getAllIssues(HttpServletResponse httpRes) {
+	public IssuesResponseDto getAllIssues(HttpServletResponse httpRes) throws IOException {
 		IssuesResponseDto response = new IssuesResponseDto();
 		try {
 			response = projectService.getAllIssues();
 			response.setMessage("Issue succesfully created! ");
 		} catch (Throwable t) {
 			log.error("error while creating issue", t);
+			httpRes.sendError(500);
 			response.setMessage("Something went wrong!");
 		}
 		httpRes.addHeader("Access-Control-Allow-Origin", "*");
@@ -120,7 +126,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/issues/{id}")
-	public BaseResponse addCommentToIssue(@PathVariable Long id, @RequestBody CommentDto request,HttpServletResponse httpRes) {
+	public BaseResponse addCommentToIssue(@PathVariable Long id, @RequestBody CommentDto request,HttpServletResponse httpRes) throws IOException {
 		BaseResponse response = new BaseResponse();
 		try {
 			projectService.addCommentToIssue(id,request);
@@ -128,6 +134,7 @@ public class ProjectController {
 		} catch (Throwable t) {
 			log.error("error while creating issue", t);
 			response.setMessage("Something went wrong!");
+			httpRes.sendError(500);
 		}
 		httpRes.addHeader("Access-Control-Allow-Origin", "*");
 		return response;
@@ -147,7 +154,7 @@ public class ProjectController {
 	}
 	
 	@RequestMapping(value = "/deleteprojects", method = RequestMethod.POST)
-	public BaseResponse delete(@RequestBody DeleteProjectsRequestDto request) {
+	public BaseResponse delete(@RequestBody DeleteProjectsRequestDto request,HttpServletResponse httpRes) throws IOException {
 		BaseResponse response = new BaseResponse();
 		try {
 			projectService.removeProjects(request.getProjectIds());
@@ -156,12 +163,13 @@ public class ProjectController {
 		} catch (Throwable t) {
 			log.error("error while remove projects", t);
 			response.setMessage("Something went wrong!");
+			httpRes.sendError(500);
 		}
 		return response;
 	}
 	
 	@RequestMapping(value = "/deleteissues", method = RequestMethod.POST)
-	public BaseResponse delete(@RequestBody DeleteIssuesRequestDto request) {
+	public BaseResponse delete(@RequestBody DeleteIssuesRequestDto request,HttpServletResponse httpRes) throws IOException {
 		BaseResponse response = new BaseResponse();
 		try {
 			projectService.removeIssues(request.getIssueIds());
@@ -170,6 +178,7 @@ public class ProjectController {
 		} catch (Throwable t) {
 			log.error("error while remove issues", t);
 			response.setMessage("Something went wrong!");
+			httpRes.sendError(500);
 		}
 		return response;
 	}

@@ -99,7 +99,7 @@ export default {
         {
           title: "Priority",
           key: "priority",
-          selects: ["Low", "Medium", "High"]
+          selects: ["Low", "Medium", "Top"]
         },
         { title: "Type", key: "type", selects: ["Bug", "New Feature"] },
         {

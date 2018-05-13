@@ -6,7 +6,7 @@ import com.thesis.accountservice.domain.Account;
 
 public interface AccountRepository extends JpaRepository<Account,Long>{
 
-	Account findByEmail(String email);
+	public Account findByEmail(String email);
 
 	public Account findByUsername(String username);
 

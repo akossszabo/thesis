@@ -1,4 +1,4 @@
-package com.thesis.chatservice;
+package com.thesis.chatservice.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

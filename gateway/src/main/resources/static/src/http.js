@@ -24,6 +24,7 @@ http.interceptors.response.use(response => {
     return response
 }, error => {
     console.error("error during response: " + error)
+    alert("Something went wrong, please try again later!")
     return Promise.reject(error)
 })
 

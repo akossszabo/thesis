@@ -62,9 +62,9 @@ export default {
       datas: [],
       users:[],
       filters: [
-        { title: "Priority", key: "priority", selects: ["Low", "Medium", "High"] },
+        { title: "Priority", key: "priority", selects: ["Low", "Medium", "Top"] },
         { title: "Type", key: "type", selects: ["Bug", "New Feature"] },
-        { title: "Status", key: "status", selects: ["Todo", "In Progress", "Under Review", "Done", "Cancelled"] },
+        { title: "Status", key: "status", selects: ["Todo", "In Progress", "In Review", "Done", "Cancelled"] },
       ],
       formfields: [
         {

@@ -1,4 +1,4 @@
-package com.thesis.projectservice;
+package com.thesis.projectservice.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

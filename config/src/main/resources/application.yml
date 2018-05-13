@@ -4,8 +4,7 @@ spring:
       server:
         native:
           search-locations: classpath:/shared
-  profiles:
-     active: native
-
+        git:
+          uri: https://github.com/akossszabo/config-repo
 server:
   port: 8888

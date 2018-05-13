@@ -8,7 +8,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/project-service
 
   jpa:
-    show-sql: true
     properties: 
         default_schema: thesis
         hibernate:
@@ -17,7 +16,7 @@ spring:
           jdbc:
             lob:
               non_contextual_creation: true
-        
+    show-sql: true    
 logging:
   level:
     org:

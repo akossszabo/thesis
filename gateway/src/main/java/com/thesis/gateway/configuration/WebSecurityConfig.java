@@ -1,6 +1,5 @@
 package com.thesis.gateway.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -9,17 +8,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter.Mode;
 
-import com.thesis.gateway.client.AccountServiceClient;
-
 @Configuration
 @EnableWebFluxSecurity
 public class WebSecurityConfig {
-
-	@Autowired
-	private AccountServiceClient accServiceClient;
-
-	@Autowired
-	private BCryptPasswordEncoder encoder;
 
 	@Bean
 	public SecurityWebFilterChain securitygWebFilterChain(ServerHttpSecurity http) {
@@ -27,7 +18,6 @@ public class WebSecurityConfig {
 		return http
 				.authorizeExchange()
 				.anyExchange()
-				//.permitAll()
 				.authenticated()
 				.and()
 				.formLogin()

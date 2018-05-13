@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thesis.projectservice.client.AccountServiceClient;
-import com.thesis.projectservice.client.GatewayClient;
 import com.thesis.projectservice.domain.Comment;
 import com.thesis.projectservice.domain.Issue;
 import com.thesis.projectservice.domain.Project;
@@ -30,9 +29,7 @@ import com.thesis.projectservice.repository.ProjectRepository;
 public class ProjectService {
 
 	private static Logger log = LoggerFactory.getLogger(ProjectService.class);
-	@Autowired
-	private GatewayClient gatewayClient;
-
+	
 	@Autowired
 	private AccountServiceClient accountClient;
 
